@@ -7,6 +7,6 @@ public class SimpleTest {
     @DisplayName("Simple Test")
     @Test
     void simpleTest() {
-        assert true;
+        assert false : "This is a simple test";
     }
 }
