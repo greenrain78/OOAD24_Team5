@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: demo
+  datasource:
+#    url: 'jdbc:h2:mem:test'   # H2 DB 연결 주소 (In-Memory Mode)
+    url: jdbc:h2:./data/demo
+    username: sa
+    password: 1234
+    driver-class-name: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+      path: /h2-console       # H2 Console 접속 주소
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+  sql:
+    init:
+      encoding: UTF-8
+logging:
+  level:
+    org.hibernate.type: trace
+
+my:
+  info:
+    ip: 127.0.0.1
+    port: 11110
+    socket: 11120
+    id: team5
+    x: 15
+    y: 20

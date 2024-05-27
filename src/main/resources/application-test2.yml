@@ -1,0 +1,12 @@
+spring:
+  profiles: test2
+  datasource:
+    url: jdbc:h2:mem:testdb2
+my:
+  info:
+    ip: 127.0.0.1
+    port: 11112
+    socket: 11122
+    id: team2
+    x: 3
+    y: 4

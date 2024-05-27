@@ -1,0 +1,21 @@
+insert into items (name, price, quantity, item_code) values ('콜라', 100, 10, 1);
+insert into items (name, price, quantity, item_code) values ('사이다', 100, 10, 2);
+insert into items (name, price, quantity, item_code) values ('녹차', 100, 10, 3);
+insert into items (name, price, quantity, item_code) values ('홍차', 100, 10, 4);
+insert into items (name, price, quantity, item_code) values ('밀크티', 100, 10, 5);
+insert into items (name, price, quantity, item_code) values ('탄산수', 100, 10, 6);
+insert into items (name, price, quantity, item_code) values ('보리차', 100, 10, 7);
+insert into items (name, price, quantity, item_code) values ('캔커피', 100, 10, 8);
+insert into items (name, price, quantity, item_code) values ('물', 100, 10, 9);
+insert into items (name, price, quantity, item_code) values ('에너지드링크', 100, 10, 10);
+insert into items (name, price, quantity, item_code) values ('유자차', 100, 10, 11);
+insert into items (name, price, quantity, item_code) values ('식혜', 100, 10, 12);
+insert into items (name, price, quantity, item_code) values ('아이스티', 100, 10, 13);
+insert into items (name, price, quantity, item_code) values ('딸기주스', 100, 10, 14);
+insert into items (name, price, quantity, item_code) values ('오렌지주스', 100, 10, 15);
+insert into items (name, price, quantity, item_code) values ('포도주스', 100, 10, 16);
+insert into items (name, price, quantity, item_code) values ('이온음료', 100, 10, 17);
+insert into items (name, price, quantity, item_code) values ('아메리카노', 100, 10, 18);
+insert into items (name, price, quantity, item_code) values ('핫초코', 100, 10, 19);
+insert into items (name, price, quantity, item_code) values ('카페라떼', 100, 10, 20);
+

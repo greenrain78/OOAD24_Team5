@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>음료 선택</title>
+    <link rel="stylesheet" href="../css/select_beverage.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="../javascript/select_beverage.js"></script>
+</head>
+<body>
+    <div id="select_form" class="hidden">
+        <h2>음료 개수 선택</h2>
+        <p id="item_info">음료수 상세 설명</p>
+        <div class="machine-selection">
+            <div class="counter">
+                <button id="sub" class="counter-button">-</button>
+                <span id="counter-value">0/5</span>
+                <button id="add" class="counter-button">+</button>
+            </div>
+        </div>
+        <div class="summary">
+            <p>합계: <span id="total">0</span></p>
+        </div>
+        <div class="actions">
+            <button class="button_cancel">취소</button>
+            <button class="button_purchase">구매</button>
+        </div>
+    </div>
+    <div class="container">
+        <div class="header">
+            <img src="../image/home_icon.png" alt="Home" id="home-icon">
+        </div>
+        <div class="drink-grid">
+            <div id="1" class="drink-item"><img src="../image/drink.png"/><p></p></div>
+            <div id="2" class="drink-item"><img src="../image/drink.png"/><p></p></div>
+            <div id="3" class="drink-item"><img src="../image/drink.png"/><p></p></div>
+            <div id="4" class="drink-item"><img src="../image/drink.png"/><p></p></div>
+            <div id="5" class="drink-item"><img src="../image/drink.png"/><p></p></div>
+            <div id="6" class="drink-item"><img src="../image/drink.png"/><p></p></div>
+            <div id="7" class="drink-item"><img src="../image/drink.png"/><p></p></div>
+            <div id="8" class="drink-item"><img src="../image/drink.png"/><p></p></div>
+            <div id="9" class="drink-item"><img src="../image/drink.png"/><p></p></div>
+        </div>
+    </div>
+</body>
+</html>
