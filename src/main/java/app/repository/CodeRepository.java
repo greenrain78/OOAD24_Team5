@@ -11,5 +11,5 @@ import java.util.List;
 public interface CodeRepository extends JpaRepository<Code, Long> {
     public List<Code> findAllByTimeAfter(LocalDateTime time);
     public List<Code> findAllByTimeBefore(LocalDateTime time);
-
+    public Code findByCode(String code);
 }

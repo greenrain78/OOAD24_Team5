@@ -23,7 +23,8 @@ public class CodeRepositoryTest {
         assert codeRepository.findAll().isEmpty() : "실제 값 : " + codeRepository.findAll();
         // 저장
         Code testCode = new Code("testCode1", time, 1, 1);
-        Code savedCode = codeRepository.save(testCode);
+        codeRepository.save(testCode);
+        Code savedCode = codeRepository.findByCode("testCode1");
 
         // 저장된 데이터가 맞는지 확인
         assert savedCode.getCode().equals("testCode1") : "실제 값 : " + savedCode.getCode();
