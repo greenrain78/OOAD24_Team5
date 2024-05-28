@@ -1,5 +1,6 @@
 package app.socket;
 
+import app.domain.OrderRequest;
 import app.domain.SocketMessage;
 
 import java.io.BufferedReader;
@@ -31,4 +32,7 @@ public class SocketRequester {
         });
         return items;
     }
+
+//    public Map<String, String> prepay(String myId, String dstId, OrderRequest orderRequest, String authCode, BufferedReader input, PrintWriter output) {
+//    }
 }

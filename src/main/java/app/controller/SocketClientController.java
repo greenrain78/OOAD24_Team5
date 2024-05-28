@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.domain.Info;
+import app.domain.OrderRequest;
 import app.service.SocketClientService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,15 +21,7 @@ public class SocketClientController {
 
     @Autowired
     private SocketClientService socketClientService;
-    @GetMapping("/client/{id}")
-    public ResponseEntity<Object> getInfoByDVM(@PathVariable String id) {
-        try {
-            Info result = socketClientService.getInfoByID(id);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
+
     @GetMapping("/client/{id}/items")
     public ResponseEntity<Object> getItemsByDVM(@PathVariable String id) {
         try {
@@ -36,6 +29,25 @@ public class SocketClientController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("error", e);
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+//    @PostMapping("/client/{id}/prepay")
+//    public ResponseEntity<Object> prepay(@PathVariable String id, @RequestBody OrderRequest orderRequest) {
+//        try {
+//            Map<String, String> result = socketClientService.prepay(id, orderRequest);
+//            return ResponseEntity.ok(result);
+//        } catch (Exception e) {
+//            log.error("error", e);
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
+    @GetMapping("/client/{id}")
+    public ResponseEntity<Object> getInfoByDVM(@PathVariable String id) {
+        try {
+            Info result = socketClientService.getInfoByID(id);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

@@ -94,7 +94,7 @@
         itemCodes.forEach(itemCode => {
             let row = `<tr><td>${itemCode}</td>`;
             allData.forEach(data => {
-                row += `<td>${data[itemCode] || 0}</td>`;
+                row += `<td>${data[itemCode] || -1}</td>`;
             });
             row += '</tr>';
             tbody.innerHTML += row;

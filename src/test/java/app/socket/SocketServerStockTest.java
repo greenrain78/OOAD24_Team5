@@ -85,7 +85,10 @@ public class SocketServerStockTest {
         SocketMessage message = new SocketMessage("req_stock", "team1", "team6", stock);
         output.println(message.toJson());
         // 응답 확인
-        SocketMessage resp = SocketMessage.fromJson(input.readLine());
+        String response = input.readLine();
+        System.out.println(response);
+        SocketMessage resp = SocketMessage.fromJson(response);
+//        SocketMessage resp = SocketMessage.fromJson(input.readLine());
         assert Objects.equals(resp.msg_type(), "error") : "응답: " + resp.toJson();
         assert Objects.equals(resp.src_id(), "team5") : "응답: " + resp.toJson();
         assert Objects.equals(resp.dst_id(), "team1") : "응답: " + resp.toJson();

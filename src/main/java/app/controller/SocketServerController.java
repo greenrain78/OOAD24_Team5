@@ -50,7 +50,7 @@ public class SocketServerController {
         if (myInfo.getId().equals(msg.dst_id())) {
             return true;
         } else {
-            output.println(createErrorMessage(msg.src_id(), new IllegalArgumentException("Invalid ID")));
+            output.println(createErrorMessage(msg.src_id(), new IllegalArgumentException("Invalid ID")).toJson());
             return false;
         }
     }
