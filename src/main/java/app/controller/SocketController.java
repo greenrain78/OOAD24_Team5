@@ -23,8 +23,6 @@ public class SocketController {
 
     public void requestStock(SocketMessage msg, PrintWriter output) {
         try {
-            // ID 확인
-            checkID(msg.dst_id());
             // item 조회
             int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
             HashMap<String, String> content = socketService.requestStock(itemCode);
@@ -37,8 +35,6 @@ public class SocketController {
 
     public void requestPayment(SocketMessage msg, PrintWriter output) {
         try {
-            // ID 확인
-            checkID(msg.dst_id());
             // 결제 요청
             int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
             int quantity = Integer.parseInt(msg.msg_content().get("quantity"));
@@ -49,9 +45,13 @@ public class SocketController {
             output.println(createErrorMessage(msg.src_id(), e).toJson());
         }
     }
-    private void checkID(String dstId) {
-        if (!dstId.equals(myInfo.getId())) {
-            throw new IllegalArgumentException("Invalid ID");
+    // 메세지가 유효한지 검사
+    public boolean isValidMessage(SocketMessage msg, PrintWriter output) {
+        if (myInfo.getId().equals(msg.dst_id())) {
+            return true;
+        } else {
+            output.println(createErrorMessage(msg.src_id(), new IllegalArgumentException("Invalid ID")));
+            return false;
         }
     }
     private SocketMessage createErrorMessage(String srcID, Exception e){

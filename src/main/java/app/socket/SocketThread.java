@@ -47,6 +47,11 @@ public class SocketThread extends Thread {
         try {
             SocketMessage msg = SocketMessage.fromJson(clientMessage);
             log.info("Received: " + msg);
+            // 해당 요청이 유효한지 확인
+            if (!controller.isValidMessage(msg, output)) {
+                return;
+            }
+            // 요청 처리
             switch (msg.msg_type()) {
                 case "req_stock":
                     controller.requestStock(msg, output);
