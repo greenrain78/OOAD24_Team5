@@ -55,4 +55,13 @@ public class SocketClientController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @DeleteMapping("/client/{id}")
+    public ResponseEntity<Object> deleteDVM(@PathVariable String id) {
+        try {
+            socketClientService.deleteInfo(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

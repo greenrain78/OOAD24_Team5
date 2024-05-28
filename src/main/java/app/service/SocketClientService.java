@@ -76,4 +76,10 @@ public class SocketClientService {
     public String getMyInfo() {
         return myInfo.getInfo().toString();
     }
+
+    public void deleteInfo(String id) {
+        if (socketClients.remove(id) == null) {
+            throw new IllegalArgumentException("Not found");
+        }
+    }
 }
