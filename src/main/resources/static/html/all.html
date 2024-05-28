@@ -41,17 +41,8 @@
 <h1>전체 자판기 재고 현황</h1>
 <table>
     <thead>
-    <tr>
+    <tr id="table-header">
         <th>음료수 코드</th>
-        <th class="header-group">자판기1</th>
-        <th class="header-group">자판기2</th>
-        <th class="header-group">자판기3</th>
-        <th class="header-group">자판기4</th>
-        <th class="header-group">자판기5</th>
-        <th class="header-group">자판기6</th>
-        <th class="header-group">자판기7</th>
-        <th class="header-group">자판기8</th>
-        <th class="header-group">자판기9</th>
     </tr>
     </thead>
     <tbody id="vending-data">
@@ -60,13 +51,24 @@
 </table>
 
 <script>
-    // const vendingMachineIds = ["자판기1", "자판기2", "자판기3", "자판기4", "자판기5", "자판기6", "자판기7", "자판기8", "자판기9"];
     fetch('/socket/clients')
         .then(response => response.json())
         .then(data => {
             const vendingMachineIds = data.map(item => item.id);
+            updateTableHeader(vendingMachineIds);
             displayVendingMachines(vendingMachineIds);
         });
+
+    function updateTableHeader(vendingMachineIds) {
+        const headerRow = document.getElementById('table-header');
+        vendingMachineIds.forEach(id => {
+            const th = document.createElement('th');
+            th.className = 'header-group';
+            th.textContent = id;
+            headerRow.appendChild(th);
+        });
+    }
+
     async function fetchVendingMachineData(id) {
         try {
             const response = await fetch(`/socket/client/${id}/items`);
@@ -80,6 +82,7 @@
             return {};
         }
     }
+
     async function displayVendingMachines(vendingMachineIds) {
         const tbody = document.getElementById('vending-data');
         const allData = await Promise.all(vendingMachineIds.map(id => fetchVendingMachineData(id)));
