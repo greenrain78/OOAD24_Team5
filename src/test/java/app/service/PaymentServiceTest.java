@@ -38,7 +38,7 @@ public class PaymentServiceTest {
         assert result.name().equals("pick up test"): "result.name() = " + result.name();
         assert result.quantity() == 1: "result.quantity() = " + result.quantity();
         int quantityAfterPickup = itemRepository.findByItemCode(itemCode).getQuantity();
-        assert quantityAfterPickup == 999: "quantityAfterPickup = " + quantityAfterPickup;
+        assert quantityAfterPickup == 1000: "quantityAfterPickup = " + quantityAfterPickup; // 선결제시 수량이 감소했음
         Code code = codeRepository.findByCode(cert_code);
         assert code == null: "code = " + code;
     }

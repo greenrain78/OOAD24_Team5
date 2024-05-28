@@ -60,9 +60,6 @@ public class PaymentService {
         if (item == null) {
             return null;    // 상품이 존재하지 않음
         }
-        // 상품 수량 감소
-        item.setQuantity(item.getQuantity() - code.getQuantity());
-        itemRepository.save(item);
         // 코드 삭제
         codeRepository.delete(code);
         return new FakeDrink(item.getName(), code.getQuantity());
