@@ -27,4 +27,12 @@ public class PaymentController {
     public String prepay() {
         return "Prepayment successful";
     }
+    @PostMapping("/pickup")
+    public String pickup(@RequestBody String cert_code) {
+        if (paymentService.requestPickup(cert_code)) {
+            return "Pickup successful";
+        } else {
+            return "Pickup failed";
+        }
+    }
 }
