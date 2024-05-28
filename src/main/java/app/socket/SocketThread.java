@@ -1,7 +1,7 @@
 package app.socket;
 
 
-import app.controller.SocketController;
+import app.controller.SocketServerController;
 import app.domain.SocketMessage;
 import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
@@ -15,9 +15,9 @@ import java.net.Socket;
 public class SocketThread extends Thread {
     private final Socket socket;
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final SocketController controller;
+    private final SocketServerController controller;
 
-    public SocketThread(Socket socket, SocketController controller) {
+    public SocketThread(Socket socket, SocketServerController controller) {
         this.socket = socket;
         this.controller = controller;
     }

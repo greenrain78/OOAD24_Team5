@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 @Component
-public class SocketController {
+public class SocketServerController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired

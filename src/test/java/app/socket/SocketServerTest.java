@@ -1,9 +1,7 @@
 package app.socket;
 
-import app.controller.SocketController;
+import app.controller.SocketServerController;
 import app.domain.SocketMessage;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,7 @@ import java.util.Objects;
 public class SocketServerTest {
 
     @Autowired
-    private SocketController controller;
+    private SocketServerController controller;
     private static SocketServer otherServer;
 
     public void setUp() {
