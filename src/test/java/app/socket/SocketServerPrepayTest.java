@@ -80,7 +80,7 @@ public class SocketServerPrepayTest {
         int quantity = itemRepository.findByItemCode(ITEM_CODE).getQuantity();
         assert quantity == TOTAL_QUANTITY - PREPAY_QUANTITY : "재고: " + quantity;
         // 인증코드 확인
-        Code code = codeRepository.findById(1L).orElse(null);
+        Code code = codeRepository.findByCode(CERT_CODE);
         assert code != null : "인증코드 없음";
         assert Objects.equals(code.getCode(), CERT_CODE) : "인증코드: " + code;
         assert code.getItemCode() == ITEM_CODE : "인증코드: " + code;
