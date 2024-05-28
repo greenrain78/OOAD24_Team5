@@ -29,7 +29,6 @@ logging:
 my:
   info:
     ip: 127.0.0.1
-    port: 11110
     socket: 11120
     id: team5
     x: 15

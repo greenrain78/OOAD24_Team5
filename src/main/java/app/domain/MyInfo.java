@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class MyInfo {
     @Value("${my.info.ip}")
     private String ip;
-    @Value("${my.info.port}")
+    @Value("${server.port}")
     private int port;
     @Value("${my.info.id}")
     private String id;
