@@ -1,6 +1,6 @@
 package app.controller;
 
-import app.domain.Info;
+import app.domain.MyInfo;
 import app.domain.SocketMessage;
 import app.service.SocketService;
 import org.slf4j.Logger;
@@ -18,7 +18,8 @@ public class SocketController {
     @Autowired
     private SocketService socketService;
 
-    private final Info myInfo = new Info(15, 14, "team5", "127.0.0.1", 12345);
+    @Autowired
+    private MyInfo myInfo;
 
     public void requestStock(SocketMessage msg, PrintWriter output) {
         try {
