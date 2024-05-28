@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자판기 재고 현황</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        th.rotate {
+            height: 140px;
+            white-space: nowrap;
+        }
+        th.rotate > div {
+            transform:
+                    translate(25px, 51px)
+                    rotate(315deg);
+            width: 30px;
+        }
+        .header-group {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1>전체 자판기 재고 현황</h1>
+<table>
+    <thead>
+    <tr>
+        <th>음료수 코드</th>
+        <th class="header-group">자판기1</th>
+        <th class="header-group">자판기2</th>
+        <th class="header-group">자판기3</th>
+        <th class="header-group">자판기4</th>
+        <th class="header-group">자판기5</th>
+        <th class="header-group">자판기6</th>
+        <th class="header-group">자판기7</th>
+        <th class="header-group">자판기8</th>
+        <th class="header-group">자판기9</th>
+    </tr>
+    </thead>
+    <tbody id="vending-data">
+    <!-- 데이터가 여기 삽입될 것입니다 -->
+    </tbody>
+</table>
+
+<script>
+    const vendingMachines = [
+        { "id": "자판기1", "data": {"item1": 10, "item2": 5, "item3": 2, "item4": 8, "item5": 4, "item6": 12, "item7": 3, "item8": 7, "item9": 11, "item10": 6, "item11": 9, "item12": 1, "item13": 0, "item14": 3, "item15": 2, "item16": 8, "item17": 4, "item18": 5, "item19": 6, "item20": 10} },
+        { "id": "자판기2", "data": {"item1": 6, "item2": 4, "item3": 5, "item4": 7, "item5": 3, "item6": 8, "item7": 6, "item8": 2, "item9": 4, "item10": 9, "item11": 10, "item12": 5, "item13": 3, "item14": 7, "item15": 6, "item16": 2, "item17": 9, "item18": 4, "item19": 7, "item20": 8} },
+        { "id": "자판기2", "data": {"item1": 6, "item2": 4, "item3": 5, "item4": 7, "item5": 3, "item6": 8, "item7": 6, "item8": 2, "item9": 4, "item10": 9, "item11": 10, "item12": 5, "item13": 3, "item14": 7, "item15": 6, "item16": 2, "item17": 9, "item18": 4, "item19": 7, "item20": 8} },
+        { "id": "자판기2", "data": {"item1": 6, "item2": 4, "item3": 5, "item4": 7, "item5": 3, "item6": 8, "item7": 6, "item8": 2, "item9": 4, "item10": 9, "item11": 10, "item12": 5, "item13": 3, "item14": 7, "item15": 6, "item16": 2, "item17": 9, "item18": 4, "item19": 7, "item20": 8} },
+        { "id": "자판기2", "data": {"item1": 6, "item2": 4, "item3": 5, "item4": 7, "item5": 3, "item6": 8, "item7": 6, "item8": 2, "item9": 4, "item10": 9, "item11": 10, "item12": 5, "item13": 3, "item14": 7, "item15": 6, "item16": 2, "item17": 9, "item18": 4, "item19": 7, "item20": 8} },
+        { "id": "자판기2", "data": {"item1": 6, "item2": 4, "item3": 5, "item4": 7, "item5": 3, "item6": 8, "item7": 6, "item8": 2, "item9": 4, "item10": 9, "item11": 10, "item12": 5, "item13": 3, "item14": 7, "item15": 6, "item16": 2, "item17": 9, "item18": 4, "item19": 7, "item20": 8} },
+        { "id": "자판기2", "data": {"item1": 6, "item2": 4, "item3": 5, "item4": 7, "item5": 3, "item6": 8, "item7": 6, "item8": 2, "item9": 4, "item10": 9, "item11": 10, "item12": 5, "item13": 3, "item14": 7, "item15": 6, "item16": 2, "item17": 9, "item18": 4, "item19": 7, "item20": 8} },
+        { "id": "자판기2", "data": {"item1": 6, "item2": 4, "item3": 5, "item4": 7, "item5": 3, "item6": 8, "item7": 6, "item8": 2, "item9": 4, "item10": 9, "item11": 10, "item12": 5, "item13": 3, "item14": 7, "item15": 6, "item16": 2, "item17": 9, "item18": 4, "item19": 7, "item20": 8} },
+        { "id": "자판기2", "data": {"item1": 6, "item2": 4, "item3": 5, "item4": 7, "item5": 3, "item6": 8, "item7": 6, "item8": 2, "item9": 4, "item10": 9, "item11": 10, "item12": 5, "item13": 3, "item14": 7, "item15": 6, "item16": 2, "item17": 9, "item18": 4, "item19": 7, "item20": 8} }
+    ];
+
+    function renderRow(itemCode) {
+        let row = `<tr><td>${itemCode}</td>`;
+        vendingMachines.forEach(machine => {
+            row += `<td>${machine.data[itemCode] || 0}</td>`;
+        });
+        row += '</tr>';
+        return row;
+    }
+
+    function displayVendingMachines() {
+        const tbody = document.getElementById('vending-data');
+        const itemCodes = Object.keys(vendingMachines[0].data);
+        itemCodes.forEach(itemCode => {
+            tbody.innerHTML += renderRow(itemCode);
+        });
+    }
+
+    displayVendingMachines();
+</script>
+</body>
+</html>
