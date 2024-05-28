@@ -19,7 +19,24 @@ public class SocketClientController {
 
     @Autowired
     private SocketClientService socketClientService;
-
+    @GetMapping("/client/{id}")
+    public ResponseEntity<Object> getInfoByDVM(@PathVariable String id) {
+        try {
+            Info result = socketClientService.getInfoByID(id);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    @GetMapping("/client/{id}/items")
+    public ResponseEntity<Object> getItemsByDVM(@PathVariable String id) {
+        try {
+            Map<String, String> result = socketClientService.getItems(id);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     @GetMapping("/clients")
     public List<Info> getAllDVM() {
         return socketClientService.getAllInfo();
