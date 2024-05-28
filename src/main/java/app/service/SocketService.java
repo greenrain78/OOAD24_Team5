@@ -1,13 +1,16 @@
 package app.service;
 
 
+import app.domain.Code;
 import app.domain.Item;
+import app.repository.CodeRepository;
 import app.repository.ItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @Service
@@ -15,6 +18,8 @@ public class SocketService {
 
     @Autowired
     private ItemRepository itemRepository;
+    @Autowired
+    private CodeRepository codeRepository;
 
     @Autowired
     private PaymentService paymentService;
@@ -33,7 +38,7 @@ public class SocketService {
         return content;
     }
 
-    public HashMap<String, String> requestPrePayment(int itemCode, int quantity) {
+    public HashMap<String, String> requestPrePayment(int itemCode, int quantity, String code) {
         // item 조회
         Item item = itemRepository.findByItemCode(itemCode);
         if (item == null) {
@@ -49,9 +54,11 @@ public class SocketService {
         content.put("item_num", String.valueOf(quantity));    // 선결제 수량
         if (!result) {
             content.put("availability", "F");
-        } else {
-            content.put("availability", "T");
+            return content;
         }
+        // 인증코드 저장
+        codeRepository.save(new Code(code, LocalDateTime.now(), itemCode, quantity));
+        content.put("availability", "T");
         return content;
 
     }

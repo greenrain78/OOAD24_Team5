@@ -38,7 +38,8 @@ public class SocketServerController {
             // 결제 요청
             int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
             int quantity = Integer.parseInt(msg.msg_content().get("quantity"));
-            HashMap<String, String> content = socketService.requestPrePayment(itemCode, quantity);
+            String code = msg.msg_content().get("cert_code");
+            HashMap<String, String> content = socketService.requestPrePayment(itemCode, quantity, code);
             SocketMessage response = new SocketMessage("resp_prepay", myInfo.getId(), msg.src_id(), content);
             output.println(response.toJson());
         } catch (Exception e) {
