@@ -3,6 +3,7 @@ package app.service;
 import app.domain.Info;
 import app.domain.MyInfo;
 import app.domain.SocketMessage;
+import app.socket.SocketRequester;
 import io.swagger.v3.core.util.Json;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,9 +21,8 @@ public class SocketClientService {
 
     private final HashMap<String, Info> socketClients = new HashMap<>();
 
-    // item code == 1~20
-    private final List<String> itemCodeList = List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-            "11", "12", "13", "14", "15", "16", "17", "18", "19", "20");
+    private final SocketRequester socketRequester = new SocketRequester();
+
     @Autowired
     private MyInfo myInfo;
 
@@ -39,23 +39,13 @@ public class SocketClientService {
              BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
         ) {
-            Map<String, String> items = new HashMap<>();
-            itemCodeList.forEach(itemCode -> {
-                HashMap<String, String> stock = new HashMap<>();
-                stock.put("item_code", itemCode);
-                stock.put("item_num", "3");
-                // 메세지 전송 - team1에서 team5로 요청
-                SocketMessage message = new SocketMessage("req_stock", "team1", "team5", stock);
-                output.println(message.toJson());
-                // 응답 확인
-                try {
-                    SocketMessage resp = SocketMessage.fromJson(input.readLine());
-                    items.put(resp.msg_content().get("item_code"), resp.msg_content().get("item_num"));
-                } catch (IOException e) {
-                    items.put(itemCode, "-1");
-                }
-
-            });
+            Map<String, String> items = socketRequester.getItems(myInfo.getInfo().getId(), info.getId(), input, output);
+            if (items.isEmpty()) {
+                throw new IllegalArgumentException("Failed to get items");
+            }
+            if (items.containsKey(null)) {
+                throw new IllegalArgumentException("Failed to get items");
+            }
             return items;
         } catch (IOException e) {
             e.printStackTrace();

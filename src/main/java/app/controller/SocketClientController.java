@@ -4,6 +4,7 @@ import app.domain.Info;
 import app.service.SocketClientService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +13,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/socket")
 public class SocketClientController {
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private SocketClientService socketClientService;
@@ -34,6 +35,7 @@ public class SocketClientController {
             Map<String, String> result = socketClientService.getItems(id);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
+            log.error("error", e);
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
