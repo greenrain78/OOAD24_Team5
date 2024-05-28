@@ -1,6 +1,7 @@
 package app.service;
 
 import app.domain.Code;
+import app.domain.FakeDrink;
 import app.domain.Item;
 import app.repository.CodeRepository;
 import app.repository.ItemRepository;
@@ -31,9 +32,11 @@ public class PaymentServiceTest {
         itemRepository.save(new Item("pick up test", 1000, itemCode));
         codeRepository.save(new Code(cert_code, LocalDateTime.now(), itemCode, quantity));
         // when
-        boolean result = paymentService.requestPickup(cert_code);
+        FakeDrink result = paymentService.requestPickup(cert_code);
         // then
-        assert result;
+        assert result != null;
+        assert result.name().equals("pick up test"): "result.name() = " + result.name();
+        assert result.quantity() == 1: "result.quantity() = " + result.quantity();
         int quantityAfterPickup = itemRepository.findByItemCode(itemCode).getQuantity();
         assert quantityAfterPickup == 999: "quantityAfterPickup = " + quantityAfterPickup;
         Code code = codeRepository.findByCode(cert_code);

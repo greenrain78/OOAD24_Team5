@@ -77,7 +77,7 @@ public class SocketServerPrepayTest {
         assert Objects.equals(resp.msg_content().get("item_num"), String.valueOf(PREPAY_QUANTITY)) : "응답: " + resp.toJson();
 
         // 선결제 후 재고 확인
-        int quantity = itemRepository.findByItemCode(2).getQuantity();
+        int quantity = itemRepository.findByItemCode(ITEM_CODE).getQuantity();
         assert quantity == TOTAL_QUANTITY - PREPAY_QUANTITY : "재고: " + quantity;
         // 인증코드 확인
         Code code = codeRepository.findById(1L).orElse(null);
@@ -86,7 +86,6 @@ public class SocketServerPrepayTest {
         assert code.getItemCode() == ITEM_CODE : "인증코드: " + code;
         assert code.getQuantity() == PREPAY_QUANTITY : "인증코드: " + code;
         assert code.getTime() != null : "인증코드: " + code;
-
     }
 
 

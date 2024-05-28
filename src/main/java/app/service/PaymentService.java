@@ -2,6 +2,7 @@ package app.service;
 
 import app.adapter.CardCompany;
 import app.domain.Code;
+import app.domain.FakeDrink;
 import app.domain.Item;
 import app.repository.CodeRepository;
 import app.repository.ItemRepository;
@@ -50,20 +51,20 @@ public class PaymentService {
         return true;
     }
 
-    public boolean requestPickup(String cert_code) {
+    public FakeDrink requestPickup(String cert_code) {
         Code code = codeRepository.findByCode(cert_code);
         if (code == null) {
-            return false;   // 코드가 존재하지 않음
+            return null;    // 코드가 존재하지 않음
         }
         Item item = itemRepository.findByItemCode(code.getItemCode());
         if (item == null) {
-            return false;   // 상품이 존재하지 않음
+            return null;    // 상품이 존재하지 않음
         }
         // 상품 수량 감소
         item.setQuantity(item.getQuantity() - code.getQuantity());
         itemRepository.save(item);
         // 코드 삭제
         codeRepository.delete(code);
-        return true;
+        return new FakeDrink(item.getName(), code.getQuantity());
     }
 }
