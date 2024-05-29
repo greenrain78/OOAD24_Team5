@@ -8,10 +8,10 @@ import lombok.Setter;
 @Setter
 public class OrderRequest {
     private int itemCode;
-    private int cardNumber;
+    private String cardNumber;
     private int quantity;
 
-    public OrderRequest(int itemCode, int cardNumber, int quantity) {
+    public OrderRequest(int itemCode, String cardNumber, int quantity) {
         this.itemCode = itemCode;
         this.cardNumber = cardNumber;
         this.quantity = quantity;

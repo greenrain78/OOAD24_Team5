@@ -4,6 +4,7 @@ import app.domain.FakeDrink;
 import app.domain.OrderRequest;
 import app.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,24 +14,27 @@ public class PaymentController {
     private PaymentService paymentService;
 
     @PostMapping("/pay")
-    public String pay(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<Object> pay(@RequestBody OrderRequest orderRequest) {
         if (orderRequest.getQuantity() <= 0) {
-            return "선택한 상품의 수량이 0개 이하입니다.";
+            return ResponseEntity.badRequest().body("Invalid quantity");
         }
-        if (paymentService.requestPayment(orderRequest.getItemCode(), orderRequest.getCardNumber(), orderRequest.getQuantity())) {
-            return "Payment successful";
-        } else {
-            return "Payment failed";
+        try {
+            FakeDrink drink = paymentService.requestPayment(orderRequest.getItemCode(), orderRequest.getCardNumber(), orderRequest.getQuantity());
+            return ResponseEntity.ok(drink);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-    }
 
-    @PostMapping("/prepay")
-    public String prepay() {
-        return "Prepayment successful";
     }
     @PostMapping("/pickup")
-    public String pickup(@RequestBody String cert_code) {
-        FakeDrink drink = paymentService.requestPickup(cert_code);
-        return drink == null ? "Pickup failed" : "Pickup successful: " + drink;
+    public ResponseEntity<Object> pickup(@RequestBody String cert_code) {
+        try {
+            FakeDrink drink = paymentService.requestPickup(cert_code);
+            return ResponseEntity.ok(drink);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+
     }
 }

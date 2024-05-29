@@ -5,10 +5,9 @@ import app.domain.Code;
 import app.domain.Item;
 import app.repository.CodeRepository;
 import app.repository.ItemRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -23,8 +22,6 @@ public class SocketService {
 
     @Autowired
     private PaymentService paymentService;
-    private final Logger log = LoggerFactory.getLogger(getClass());
-
     public HashMap<String, String> requestStock(int itemCode) {
         // item 조회
         Item item = itemRepository.findByItemCode(itemCode);
@@ -37,7 +34,7 @@ public class SocketService {
         content.put("item_num", String.valueOf(item.getQuantity()));
         return content;
     }
-
+    @Transactional
     public HashMap<String, String> requestPrePayment(int itemCode, int quantity, String code) {
         // item 조회
         Item item = itemRepository.findByItemCode(itemCode);
