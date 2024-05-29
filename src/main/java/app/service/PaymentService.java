@@ -18,7 +18,7 @@ public class PaymentService {
     private CodeRepository codeRepository;
     private final CardCompany cardCompanyProxy = new CardCompany();
     @Transactional
-    public FakeDrink requestPayment(int itemCode, int cardNumber, int quantity) {
+    public FakeDrink requestPayment(int itemCode, String cardNumber, int quantity) {
         Item item = itemRepository.findByItemCode(itemCode);
         if (item == null) {
             throw new IllegalArgumentException("Item not found");   // 상품이 존재하지 않음

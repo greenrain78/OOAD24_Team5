@@ -1,10 +1,10 @@
 package app.adapter;
 
 public class CardCompany {
-    public boolean requestPayment(int cardNumber, int total) {
+    public boolean requestPayment(String cardNumber, int total) {
         return true;
     }
-    public boolean cancelPayment(int cardNumber, int total) {
+    public boolean cancelPayment(String cardNumber, int total) {
         return true;
     }
 }

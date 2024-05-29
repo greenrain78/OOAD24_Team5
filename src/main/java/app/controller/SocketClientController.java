@@ -36,10 +36,12 @@ public class SocketClientController {
     @PostMapping("/client/{id}/prepay")
     public ResponseEntity<Object> prepay(@PathVariable String id, @RequestBody OrderRequest orderRequest) {
         try {
+            log.info("prepay request: {}", orderRequest);
             Code result = socketClientService.prepay(id, orderRequest);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("error", e);
+            log.error("error_message: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
