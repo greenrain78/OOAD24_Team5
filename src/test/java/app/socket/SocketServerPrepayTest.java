@@ -1,6 +1,9 @@
 package app.socket;
 
+import app.domain.Code;
 import app.domain.SocketMessage;
+import app.repository.CodeRepository;
+import app.repository.ItemRepository;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -28,6 +31,12 @@ public class SocketServerPrepayTest {
     private static Socket socket;
     private static BufferedReader input;
     private static PrintWriter output;
+
+    @Autowired
+    private CodeRepository codeRepository;
+    @Autowired
+    private ItemRepository itemRepository;
+
     @BeforeAll
     public static void setUp() throws Exception {
         // 소켓 서버가 실행될 수 있도록 잠시 대기
@@ -44,50 +53,39 @@ public class SocketServerPrepayTest {
     @Test
     public void requestPrepay() throws Exception {
         initClient();
-        // 선결제 전 제고 확인
-        HashMap<String, String> stock_content = new HashMap<>();
-        stock_content.put("item_code", "2");
-        stock_content.put("quantity", "3");
-        // 메세지 전송 - team1에서 team5로 요청
-        SocketMessage message = new SocketMessage("req_stock", "team1", "team5", stock_content);
-        output.println(message.toJson());
-        // 재고 확인 응답
-        SocketMessage resp = SocketMessage.fromJson(input.readLine());
-        assert Objects.equals(resp.msg_type(), "resp_stock") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.src_id(), "team5") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.dst_id(), "team1") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.msg_content().get("item_code"), "2") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.msg_content().get("item_num"), "10") : "응답: " + resp.toJson();
+        int ITEM_CODE = 2;
+        int TOTAL_QUANTITY = 10;
+        int PREPAY_QUANTITY = 3;
+        String CERT_CODE = "aaaaa";
+        // 선결제 전 제고
+        itemRepository.findByItemCode(ITEM_CODE).setQuantity(TOTAL_QUANTITY);
 
         // 선결제 요청
         HashMap<String, String> prepay_content = new HashMap<>();
-        prepay_content.put("item_code", "2");
-        prepay_content.put("quantity", "3");
+        prepay_content.put("item_code", String.valueOf(ITEM_CODE));
+        prepay_content.put("quantity", String.valueOf(PREPAY_QUANTITY));
+        prepay_content.put("cert_code", CERT_CODE);
         // 메세지 전송 - team1에서 team5로 요청
-        message = new SocketMessage("req_prepay", "team1", "team5", prepay_content);
+        SocketMessage message = new SocketMessage("req_prepay", "team1", "team5", prepay_content);
         output.println(message.toJson());
         // 선결제 응답
-        resp = SocketMessage.fromJson(input.readLine());
+        SocketMessage resp = SocketMessage.fromJson(input.readLine());
         assert Objects.equals(resp.msg_type(), "resp_prepay") : "응답: " + resp.toJson();
         assert Objects.equals(resp.src_id(), "team5") : "응답: " + resp.toJson();
         assert Objects.equals(resp.dst_id(), "team1") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.msg_content().get("item_code"), "2") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.msg_content().get("item_num"), "3") : "응답: " + resp.toJson();
+        assert Objects.equals(resp.msg_content().get("item_code"), String.valueOf(ITEM_CODE)) : "응답: " + resp.toJson();
+        assert Objects.equals(resp.msg_content().get("item_num"), String.valueOf(PREPAY_QUANTITY)) : "응답: " + resp.toJson();
 
         // 선결제 후 재고 확인
-        stock_content = new HashMap<>();
-        stock_content.put("item_code", "2");
-        stock_content.put("quantity", "3");
-        // 메세지 전송 - team1에서 team5로 요청
-        message = new SocketMessage("req_stock", "team1", "team5", stock_content);
-        output.println(message.toJson());
-        // 재고 확인 응답
-        resp = SocketMessage.fromJson(input.readLine());
-        assert Objects.equals(resp.msg_type(), "resp_stock") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.src_id(), "team5") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.dst_id(), "team1") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.msg_content().get("item_code"), "2") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.msg_content().get("item_num"), "7") : "응답: " + resp.toJson();
+        int quantity = itemRepository.findByItemCode(ITEM_CODE).getQuantity();
+        assert quantity == TOTAL_QUANTITY - PREPAY_QUANTITY : "재고: " + quantity;
+        // 인증코드 확인
+        Code code = codeRepository.findByCode(CERT_CODE);
+        assert code != null : "인증코드 없음";
+        assert Objects.equals(code.getCode(), CERT_CODE) : "인증코드: " + code;
+        assert code.getItemCode() == ITEM_CODE : "인증코드: " + code;
+        assert code.getQuantity() == PREPAY_QUANTITY : "인증코드: " + code;
+        assert code.getTime() != null : "인증코드: " + code;
     }
 
 

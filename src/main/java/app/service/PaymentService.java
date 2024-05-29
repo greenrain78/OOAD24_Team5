@@ -1,7 +1,10 @@
 package app.service;
 
 import app.adapter.CardCompany;
+import app.domain.Code;
+import app.domain.FakeDrink;
 import app.domain.Item;
+import app.repository.CodeRepository;
 import app.repository.ItemRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Service;
 public class PaymentService {
     @Autowired
     private ItemRepository itemRepository;
+    @Autowired
+    private CodeRepository codeRepository;
     private final CardCompany cardCompanyProxy = new CardCompany();
     @Transactional
     public boolean requestPayment(int itemCode, int cardNumber, int quantity) {
@@ -44,5 +49,19 @@ public class PaymentService {
         item.setQuantity(item.getQuantity() - quantity);
         itemRepository.save(item);
         return true;
+    }
+
+    public FakeDrink requestPickup(String cert_code) {
+        Code code = codeRepository.findByCode(cert_code);
+        if (code == null) {
+            return null;    // 코드가 존재하지 않음
+        }
+        Item item = itemRepository.findByItemCode(code.getItemCode());
+        if (item == null) {
+            return null;    // 상품이 존재하지 않음
+        }
+        // 코드 삭제
+        codeRepository.delete(code);
+        return new FakeDrink(item.getName(), code.getQuantity());
     }
 }

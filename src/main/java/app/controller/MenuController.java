@@ -17,5 +17,8 @@ public class MenuController {
     public RedirectView admin(){
         return new RedirectView("/html/management.html");
     }
-
+    @GetMapping("/admin/all")
+    public RedirectView adminAll(){
+        return new RedirectView("/html/all.html");
+    }
 }

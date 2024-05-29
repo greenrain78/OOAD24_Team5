@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.domain.FakeDrink;
 import app.domain.OrderRequest;
 import app.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,10 @@ public class PaymentController {
     @PostMapping("/prepay")
     public String prepay() {
         return "Prepayment successful";
+    }
+    @PostMapping("/pickup")
+    public String pickup(@RequestBody String cert_code) {
+        FakeDrink drink = paymentService.requestPickup(cert_code);
+        return drink == null ? "Pickup failed" : "Pickup successful: " + drink;
     }
 }

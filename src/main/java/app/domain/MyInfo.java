@@ -1,19 +1,20 @@
 package app.domain;
 
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
+@Getter
 @Component
 public class MyInfo {
-    @Value("${my.info.ip}")
+    @Value("${MY_IP}")
     private String ip;
-    @Value("${my.info.port}")
+    @Value("${MY_PORT}")
     private int port;
-    @Value("${my.info.id}")
+    @Value("${MY_ID}")
     private String id;
-    @Value("${my.info.x}")
+    @Value("${MY_X}")
     private int x;
-    @Value("${my.info.y}")
+    @Value("${MY_Y}")
     private int y;
 
     public Info getInfo() {

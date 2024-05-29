@@ -1,6 +1,6 @@
 package app.controller;
 
-import app.domain.Info;
+import app.domain.MyInfo;
 import app.domain.SocketMessage;
 import app.service.SocketService;
 import org.slf4j.Logger;
@@ -12,18 +12,17 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 @Component
-public class SocketController {
+public class SocketServerController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private SocketService socketService;
 
-    private final Info myInfo = new Info(15, 14, "team5", "127.0.0.1", 12345);
+    @Autowired
+    private MyInfo myInfo;
 
     public void requestStock(SocketMessage msg, PrintWriter output) {
         try {
-            // ID 확인
-            checkID(msg.dst_id());
             // item 조회
             int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
             HashMap<String, String> content = socketService.requestStock(itemCode);
@@ -36,21 +35,24 @@ public class SocketController {
 
     public void requestPayment(SocketMessage msg, PrintWriter output) {
         try {
-            // ID 확인
-            checkID(msg.dst_id());
             // 결제 요청
             int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
             int quantity = Integer.parseInt(msg.msg_content().get("quantity"));
-            HashMap<String, String> content = socketService.requestPrePayment(itemCode, quantity);
+            String code = msg.msg_content().get("cert_code");
+            HashMap<String, String> content = socketService.requestPrePayment(itemCode, quantity, code);
             SocketMessage response = new SocketMessage("resp_prepay", myInfo.getId(), msg.src_id(), content);
             output.println(response.toJson());
         } catch (Exception e) {
             output.println(createErrorMessage(msg.src_id(), e).toJson());
         }
     }
-    private void checkID(String dstId) {
-        if (!dstId.equals(myInfo.getId())) {
-            throw new IllegalArgumentException("Invalid ID");
+    // 메세지가 유효한지 검사
+    public boolean isValidMessage(SocketMessage msg, PrintWriter output) {
+        if (myInfo.getId().equals(msg.dst_id())) {
+            return true;
+        } else {
+            output.println(createErrorMessage(msg.src_id(), new IllegalArgumentException("Invalid ID")).toJson());
+            return false;
         }
     }
     private SocketMessage createErrorMessage(String srcID, Exception e){

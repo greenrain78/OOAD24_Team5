@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>자판기 재고 현황</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        th.rotate {
+            height: 140px;
+            white-space: nowrap;
+        }
+        th.rotate > div {
+            transform:
+                    translate(25px, 51px)
+                    rotate(315deg);
+            width: 30px;
+        }
+        .header-group {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1>전체 자판기 재고 현황</h1>
+<table>
+    <thead>
+    <tr id="table-header">
+        <th>음료수 코드</th>
+    </tr>
+    </thead>
+    <tbody id="vending-data">
+    <!-- 데이터가 여기 삽입될 것입니다 -->
+    </tbody>
+</table>
+
+<script>
+    fetch('/socket/clients')
+        .then(response => response.json())
+        .then(data => {
+            const vendingMachineIds = data.map(item => item.id);
+            updateTableHeader(vendingMachineIds);
+            displayVendingMachines(vendingMachineIds);
+        });
+
+    function updateTableHeader(vendingMachineIds) {
+        const headerRow = document.getElementById('table-header');
+        vendingMachineIds.forEach(id => {
+            const th = document.createElement('th');
+            th.className = 'header-group';
+            th.textContent = id;
+            headerRow.appendChild(th);
+        });
+    }
+
+    async function fetchVendingMachineData(id) {
+        try {
+            const response = await fetch(`/socket/client/${id}/items`);
+            if (!response.ok) {
+                throw new Error(`Error fetching data for ${id}: ${response.statusText}`);
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error(error);
+            return {};
+        }
+    }
+
+    async function displayVendingMachines(vendingMachineIds) {
+        const tbody = document.getElementById('vending-data');
+        const allData = await Promise.all(vendingMachineIds.map(id => fetchVendingMachineData(id)));
+
+        const itemCodesSet = new Set();
+        allData.forEach(data => Object.keys(data).forEach(code => itemCodesSet.add(code)));
+        const itemCodes = Array.from(itemCodesSet);
+
+        itemCodes.forEach(itemCode => {
+            let row = `<tr><td>${itemCode}</td>`;
+            allData.forEach(data => {
+                row += `<td>${data[itemCode] || -1}</td>`;
+            });
+            row += '</tr>';
+            tbody.innerHTML += row;
+        });
+    }
+</script>
+</body>
+</html>
