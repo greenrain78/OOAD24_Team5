@@ -32,7 +32,7 @@ public class SocketClientService {
     @Autowired
     private ItemRepository itemRepository;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Code prepay(String id, OrderRequest orderRequest) {
         // 요금 차감
         Item item = itemRepository.findByItemCode(orderRequest.getItemCode());
@@ -49,8 +49,15 @@ public class SocketClientService {
             socketRequester.prepay(myInfo.getInfo().getId(), info.getId(), code, input, output);
             return code;
         } catch (IOException e) {
+            // 예외 발생 시 결제 취소
+            cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), item.getPrice() * orderRequest.getQuantity());
             log.error("Connection failed", e);
             throw new IllegalArgumentException("Connection failed");
+        } catch (Exception e) {
+            // 예외 발생 시 결제 취소
+            cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), item.getPrice() * orderRequest.getQuantity());
+            log.error("Failed to prepay", e);
+            throw new IllegalArgumentException("Failed to prepay");
         }
     }
     public Info getInfoByID(String id) {

@@ -47,11 +47,14 @@ public class SocketRequester {
         // 응답 확인
         try {
             SocketMessage resp = SocketMessage.fromJson(input.readLine());
+            if (resp == null) {
+                throw new RuntimeException("Failed to prepay - response is null");
+            }
             if (!resp.msg_content().get("availability").equals("T")) {
-                throw new IllegalStateException("Failed to prepay");
+                throw new RuntimeException("Failed to prepay - availability is false");
             }
         } catch (IOException e) {
-            throw new IllegalStateException("Failed to prepay");
+            throw new RuntimeException  ("Failed to prepay - IOException");
         }
     }
 }
