@@ -1,5 +1,6 @@
 package app.socket;
 
+import app.domain.Code;
 import app.domain.OrderRequest;
 import app.domain.SocketMessage;
 
@@ -33,6 +34,24 @@ public class SocketRequester {
         return items;
     }
 
-//    public Map<String, String> prepay(String myId, String dstId, OrderRequest orderRequest, String authCode, BufferedReader input, PrintWriter output) {
-//    }
+
+    public void prepay(String myId, String dstId, Code code, BufferedReader input, PrintWriter output) {
+        // 메세지 구성
+        HashMap<String, String> content = new HashMap<>();
+        content.put("item_code", String.valueOf(code.getItemCode()));
+        content.put("quantity", String.valueOf(code.getQuantity()));
+        content.put("cert_code", code.getCode());
+        // 메세지 전송 - team1에서 team5로 요청
+        SocketMessage message = new SocketMessage("req_prepay", myId, dstId, content);
+        output.println(message.toJson());
+        // 응답 확인
+        try {
+            SocketMessage resp = SocketMessage.fromJson(input.readLine());
+            if (!resp.msg_content().get("availability").equals("T")) {
+                throw new IllegalStateException("Failed to prepay");
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to prepay");
+        }
+    }
 }
