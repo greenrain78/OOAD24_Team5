@@ -21,8 +21,12 @@ public class ItemService {
         return itemRepository.findById(id);
     }
 
-    public Optional<Item> getItemByItemCode(int itemCode) {
-        return Optional.ofNullable(itemRepository.findByItemCode(itemCode));
+    public Item getItemByItemCode(int itemCode) {
+        Item item = itemRepository.findByItemCode(itemCode);
+        if (item == null) {
+            throw new IllegalArgumentException("Item not found");
+        }
+        return item;
     }
     public Item createItem(Item item) {
         return itemRepository.save(item);

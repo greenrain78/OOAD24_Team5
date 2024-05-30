@@ -1,6 +1,5 @@
 package app.socket;
 
-import app.controller.SocketServerController;
 import app.domain.SocketMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,7 +25,7 @@ import java.util.Objects;
 public class SocketServerTest {
 
     @Autowired
-    private SocketServerController controller;
+    private SocketHandler controller;
     private static SocketServer otherServer;
 
     public void setUp() throws InterruptedException {

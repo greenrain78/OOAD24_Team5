@@ -1,7 +1,6 @@
 package app.socket;
 
 
-import app.controller.SocketServerController;
 import app.domain.SocketMessage;
 import com.google.gson.JsonSyntaxException;
 import org.slf4j.Logger;
@@ -15,11 +14,11 @@ import java.net.Socket;
 public class SocketThread extends Thread {
     private final Socket socket;
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final SocketServerController controller;
+    private final SocketHandler handler;
 
-    public SocketThread(Socket socket, SocketServerController controller) {
+    public SocketThread(Socket socket, SocketHandler handler) {
         this.socket = socket;
-        this.controller = controller;
+        this.handler = handler;
     }
 
     public void run() {
@@ -56,16 +55,16 @@ public class SocketThread extends Thread {
         }
         try {
             // 해당 요청이 유효한지 확인
-            if (!controller.isValidMessage(msg, output)) {
+            if (!handler.isValidMessage(msg, output)) {
                 return;
             }
             // 요청 처리
             switch (msg.msg_type()) {
                 case "req_stock":
-                    controller.requestStock(msg, output);
+                    handler.requestStock(msg, output);
                     break;
                 case "req_prepay":
-                    controller.requestPayment(msg, output);
+                    handler.requestPayment(msg, output);
                     break;
                 default:
                     log.error("Unknown message type: " + clientMessage);
@@ -73,7 +72,7 @@ public class SocketThread extends Thread {
             }
         } catch (Exception e) {
             log.error("Error processing message: " + clientMessage, e);
-            output.println(controller.createErrorMessage(msg.src_id(), e).toJson());
+            output.println(handler.createErrorMessage(msg.src_id(), e).toJson());
         }
     }
 }

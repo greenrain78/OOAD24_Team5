@@ -1,8 +1,10 @@
-package app.controller;
+package app.socket;
 
+import app.domain.Item;
 import app.domain.MyInfo;
 import app.domain.SocketMessage;
-import app.service.SocketService;
+import app.service.ItemService;
+import app.service.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,10 +14,12 @@ import java.util.HashMap;
 
 @Slf4j
 @Component
-public class SocketServerController {
+public class SocketHandler {
+    @Autowired
+    private ItemService itemService;
 
     @Autowired
-    private SocketService socketService;
+    private PaymentService paymentService;
 
     @Autowired
     private MyInfo myInfo;
@@ -24,19 +28,27 @@ public class SocketServerController {
         log.info("requestStock: {}", msg);
         // item 조회
         int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
-        HashMap<String, String> content = socketService.requestStock(itemCode);
+        Item item = itemService.getItemByItemCode(itemCode);
+        // 응답 메세지 생성
+        HashMap<String, String> content = new HashMap<>();
+        content.put("item_code", String.valueOf(item.getItemCode()));
+        content.put("item_num", String.valueOf(item.getQuantity()));
         SocketMessage response = new SocketMessage("resp_stock", myInfo.getId(), msg.src_id(), content);
         output.println(response.toJson());
 
     }
-
     public void requestPayment(SocketMessage msg, PrintWriter output) {
         log.info("requestPayment: {}", msg);
         // 결제 요청
         int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
         int quantity = Integer.parseInt(msg.msg_content().get("quantity"));
         String code = msg.msg_content().get("cert_code");
-        HashMap<String, String> content = socketService.requestPrePayment(itemCode, quantity, code);
+        boolean result = paymentService.requestPrePayment(code, itemCode, quantity);
+        // 응답 메세지 생성
+        HashMap<String, String> content = new HashMap<>();
+        content.put("item_code", String.valueOf(itemCode));
+        content.put("item_num", String.valueOf(quantity));
+        content.put("availability", result ? "T" : "F");
         SocketMessage response = new SocketMessage("resp_prepay", myInfo.getId(), msg.src_id(), content);
         output.println(response.toJson());
     }

@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class PaymentService {
     @Autowired
@@ -35,7 +37,7 @@ public class PaymentService {
         return new FakeDrink(item.getName(), quantity);
     }
     @Transactional
-    public boolean requestPrePayment(int itemCode, int quantity) {
+    public boolean requestPrePayment(String code, int itemCode, int quantity) {
         Item item = itemRepository.findByItemCode(itemCode);
         if (item == null) {
             return false;   // 상품이 존재하지 않음
@@ -46,6 +48,8 @@ public class PaymentService {
         // 상품 수량 감소
         item.setQuantity(item.getQuantity() - quantity);
         itemRepository.save(item);
+        // 인증코드 저장
+        codeRepository.save(new Code(code, LocalDateTime.now(), itemCode, quantity));
         return true;
     }
 
