@@ -15,7 +15,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/socket")
-public class SocketClientController {
+public class CommunicationController {
 
     @Autowired
     private SocketClientService socketClientService;

@@ -45,6 +45,7 @@ public class SocketThread extends Thread {
     }
     private void handleRequest(String clientMessage, PrintWriter output) {
         SocketMessage msg;
+        // 메세지 파싱
         try {
             msg = SocketMessage.fromJson(clientMessage);
             log.info("Received: " + msg);

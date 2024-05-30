@@ -39,8 +39,8 @@ public class SocketServerController {
         HashMap<String, String> content = socketService.requestPrePayment(itemCode, quantity, code);
         SocketMessage response = new SocketMessage("resp_prepay", myInfo.getId(), msg.src_id(), content);
         output.println(response.toJson());
-
     }
+
     // 메세지가 유효한지 검사
     public boolean isValidMessage(SocketMessage msg, PrintWriter output) {
         if (myInfo.getId().equals(msg.dst_id())) {
@@ -50,7 +50,8 @@ public class SocketServerController {
             return false;
         }
     }
-    public SocketMessage createErrorMessage(String srcID, Exception e){
+
+    public SocketMessage createErrorMessage(String srcID, Exception e) {
         HashMap<String, String> content = new HashMap<>();
         content.put("error", e.getMessage());
         content.put("error_class", e.getClass().getName());
