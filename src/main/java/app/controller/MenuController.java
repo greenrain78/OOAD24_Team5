@@ -23,4 +23,9 @@ public class MenuController {
         log.info("redirect to /html/all.html");
         return new RedirectView("/html/all.html");
     }
+    @GetMapping("/admin/codes")
+    public RedirectView adminCodes(){
+        log.info("redirect to /html/codes.html");
+        return new RedirectView("/html/codes.html");
+    }
 }
