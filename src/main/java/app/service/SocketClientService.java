@@ -1,10 +1,9 @@
 package app.service;
 
-import app.adapter.CardCompany;
+import app.actor.CardCompany;
 import app.domain.*;
 import app.repository.ItemRepository;
 import app.socket.SocketRequester;
-import io.swagger.v3.core.util.Json;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.time.LocalDateTime;
 import java.util.*;
 

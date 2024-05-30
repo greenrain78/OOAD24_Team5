@@ -1,7 +1,8 @@
-package app.socket;
+package app.actor;
 
 import app.controller.SocketServerController;
 import app.domain.MyInfo;
+import app.socket.SocketServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

@@ -1,4 +1,4 @@
-package app.adapter;
+package app.actor;
 
 public class CardCompany {
     public boolean requestPayment(String cardNumber, int total) {

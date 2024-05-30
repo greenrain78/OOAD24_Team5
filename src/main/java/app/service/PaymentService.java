@@ -1,6 +1,6 @@
 package app.service;
 
-import app.adapter.CardCompany;
+import app.actor.CardCompany;
 import app.domain.Code;
 import app.domain.FakeDrink;
 import app.domain.Item;
