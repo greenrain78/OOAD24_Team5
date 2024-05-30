@@ -45,11 +45,6 @@ public class SocketClientService {
             Code code = new Code(authCode, LocalDateTime.now(), orderRequest.getItemCode(), orderRequest.getQuantity());
             socketRequester.prepay(myInfo.getInfo().getId(), info.getId(), code, input, output);
             return code;
-        } catch (IOException e) {
-            // 예외 발생 시 결제 취소
-            cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), item.getPrice() * orderRequest.getQuantity());
-            log.error("Connection failed", e);
-            throw new IllegalArgumentException("Connection failed");
         } catch (Exception e) {
             // 예외 발생 시 결제 취소
             cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), item.getPrice() * orderRequest.getQuantity());

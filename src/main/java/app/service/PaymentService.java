@@ -28,9 +28,7 @@ public class PaymentService {
         }
         // 결제 요청
         int totalPrice = item.getPrice() * quantity;
-        if (!cardCompanyProxy.requestPayment(cardNumber, totalPrice)) {
-            throw new IllegalArgumentException("Payment failed");
-        }
+        cardCompanyProxy.requestPayment(cardNumber, totalPrice);
         // 상품 수량 감소
         item.setQuantity(item.getQuantity() - quantity);
         itemRepository.save(item);
