@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CodeService {
@@ -22,18 +21,7 @@ public class CodeService {
     public List<Code> getAllCodes() {
         return codeRepository.findAll();
     }
-    public Optional<Code> getCodeByCode(String code) {
-        return Optional.ofNullable(codeRepository.findByCode(code));
-    }
-    public Code createCode(Code code) {
-        return codeRepository.save(code);
-    }
-    @Transactional
-    public Code deleteCode(String code) {
-        Code codeToRemove = codeRepository.findByCode(code);
-        codeRepository.delete(codeToRemove);
-        return codeToRemove;
-    }
+
     // 기간이 지난 코드는 삭제
     @Transactional
     public void deleteExpiredCodes() {
