@@ -44,9 +44,16 @@ public class SocketThread extends Thread {
 
     }
     private void handleRequest(String clientMessage, PrintWriter output) {
+        SocketMessage msg;
         try {
-            SocketMessage msg = SocketMessage.fromJson(clientMessage);
+            msg = SocketMessage.fromJson(clientMessage);
             log.info("Received: " + msg);
+        } catch (JsonSyntaxException e) {
+            log.error("Error parsing message: " + clientMessage);
+            output.println("{\"msg_type\":\"error\",\"msg_content\":{\"error\":\"Invalid message format\"}}");
+            return;
+        }
+        try {
             // 해당 요청이 유효한지 확인
             if (!controller.isValidMessage(msg, output)) {
                 return;
@@ -63,12 +70,9 @@ public class SocketThread extends Thread {
                     log.error("Unknown message type: " + clientMessage);
                     output.println("{\"msg_type\":\"error\",\"msg_content\":{\"error\":\"Unknown message type\"}}");
             }
-        } catch (JsonSyntaxException e) {
-            log.error("Error parsing message: " + clientMessage);
-            output.println("{\"msg_type\":\"error\",\"msg_content\":{\"error\":\"Invalid message format\"}}");
+        } catch (Exception e) {
+            log.error("Error processing message: " + clientMessage, e);
+            output.println(controller.createErrorMessage(msg.src_id(), e).toJson());
         }
-
-
-
     }
 }
