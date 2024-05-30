@@ -16,7 +16,6 @@ public class SocketRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        SocketServer socketServer = new SocketServer(myInfo.getPort(), controller);
-        socketServer.run();
+        new SocketServer(myInfo.getPort(), controller).start();
     }
 }
