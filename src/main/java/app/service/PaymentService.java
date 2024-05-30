@@ -51,6 +51,7 @@ public class PaymentService {
         return true;
     }
 
+    @Transactional
     public FakeDrink requestPickup(String cert_code) {
         Code code = codeRepository.findByCode(cert_code);
         if (code == null) {

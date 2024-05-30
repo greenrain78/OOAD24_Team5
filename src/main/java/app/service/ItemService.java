@@ -4,6 +4,7 @@ import app.domain.Item;
 import app.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class ItemService {
         return itemRepository.save(item);
     }
 
+    @Transactional
     public Item updateItem(Long id, Item itemDetails) {
         Item item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
         item.setQuantity(itemDetails.getQuantity());
