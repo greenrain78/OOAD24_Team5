@@ -34,10 +34,10 @@ public class Item {
     private int itemCode;
 
     @Builder(toBuilder = true)
-    public Item(String name, int quantity, int itemCode) {
+    public Item(String name, int itemCode, int quantity) {
         this.name = name;
-        this.quantity = quantity;
         this.itemCode = itemCode;
+        this.quantity = quantity;
     }
 
     public Item() {
