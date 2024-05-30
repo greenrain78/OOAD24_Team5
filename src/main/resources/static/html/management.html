@@ -53,7 +53,7 @@
 
 <script>
     let inventory = [];
-
+    loadData()
     function loadData() {
         fetch('/management/items')
             .then(response => response.json())
