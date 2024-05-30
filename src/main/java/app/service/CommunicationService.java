@@ -19,7 +19,7 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class SocketClientService {
+public class CommunicationService {
 
     private final HashMap<String, Info> socketClients = new HashMap<>();
     private final SocketRequester socketRequester = new SocketRequester();
@@ -33,7 +33,8 @@ public class SocketClientService {
     public Code prepay(String id, OrderRequest orderRequest) {
         // 요금 차감
         Item item = itemRepository.findByItemCode(orderRequest.getItemCode());
-        cardCompanyProxy.requestPayment(orderRequest.getCardNumber(), item.getPrice() * orderRequest.getQuantity());
+        int totalPrice = item.getPrice() * orderRequest.getQuantity();
+        cardCompanyProxy.requestPayment(orderRequest.getCardNumber(), totalPrice);
         // 인증코드 발급
         String authCode = "임시 인증코드";
         // 선결제 요청
@@ -47,9 +48,25 @@ public class SocketClientService {
             return code;
         } catch (Exception e) {
             // 예외 발생 시 결제 취소
-            cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), item.getPrice() * orderRequest.getQuantity());
+            cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), totalPrice);
             log.error("Failed to prepay", e);
             throw new IllegalArgumentException("Failed to prepay");
+        }
+    }
+    public Map<String, String> getItems(String id) {
+        Info info = getInfoByID(id);
+        try (Socket socket = new Socket(info.getIp(), info.getPort());
+             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
+        ) {
+            Map<String, String> items = socketRequester.getItems(myInfo.getInfo().getId(), info.getId(), input, output);
+            if (items.isEmpty() | items.containsKey(null)) {
+                throw new IllegalArgumentException("Failed to get items");
+            }
+            return items;
+        } catch (IOException e) {
+            log.error("Connection failed", e);
+            throw new IllegalArgumentException("Connection failed");
         }
     }
     public Info getInfoByID(String id) {
@@ -59,26 +76,6 @@ public class SocketClientService {
         }
         return info;
     }
-    public Map<String, String> getItems(String id) {
-        Info info = getInfoByID(id);
-        try (Socket socket = new Socket(info.getIp(), info.getPort());
-             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
-        ) {
-            Map<String, String> items = socketRequester.getItems(myInfo.getInfo().getId(), info.getId(), input, output);
-            if (items.isEmpty()) {
-                throw new IllegalArgumentException("Failed to get items");
-            }
-            if (items.containsKey(null)) {
-                throw new IllegalArgumentException("Failed to get items");
-            }
-            return items;
-        } catch (IOException e) {
-            log.error("Connection failed", e);
-            throw new IllegalArgumentException("Connection failed");
-        }
-    }
-
     public List<Info> getAllInfo() {
         return new ArrayList<>(socketClients.values());
     }
@@ -92,12 +89,9 @@ public class SocketClientService {
     public String getMyInfo() {
         return myInfo.getInfo().toString();
     }
-
     public void deleteInfo(String id) {
         if (socketClients.remove(id) == null) {
             throw new IllegalArgumentException("Not found");
         }
     }
-
-
 }

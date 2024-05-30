@@ -3,7 +3,7 @@ package app.controller;
 import app.domain.Code;
 import app.domain.Info;
 import app.domain.OrderRequest;
-import app.service.SocketClientService;
+import app.service.CommunicationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class CommunicationController {
 
     @Autowired
-    private SocketClientService socketClientService;
+    private CommunicationService socketClientService;
 
     @GetMapping("/client/{id}/items")
     public ResponseEntity<Object> getItemsByDVM(@PathVariable String id) {
