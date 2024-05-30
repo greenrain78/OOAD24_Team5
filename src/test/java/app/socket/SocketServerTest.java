@@ -2,10 +2,8 @@ package app.socket;
 
 import app.controller.SocketServerController;
 import app.domain.SocketMessage;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -16,7 +14,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
 /*
     * 소켓 서버 테스트

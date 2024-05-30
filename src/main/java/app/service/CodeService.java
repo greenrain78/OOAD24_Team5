@@ -1,9 +1,7 @@
 package app.service;
 
 import app.domain.Code;
-import app.domain.Item;
 import app.repository.CodeRepository;
-import app.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

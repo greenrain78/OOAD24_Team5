@@ -22,7 +22,6 @@ import java.util.*;
 public class SocketClientService {
 
     private final HashMap<String, Info> socketClients = new HashMap<>();
-
     private final SocketRequester socketRequester = new SocketRequester();
     private final CardCompany cardCompanyProxy = new CardCompany();
     @Autowired
@@ -80,7 +79,7 @@ public class SocketClientService {
             }
             return items;
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Connection failed", e);
             throw new IllegalArgumentException("Connection failed");
         }
     }
