@@ -27,7 +27,8 @@ public class CommunicationService {
     private final SocketRequester socketRequester = new SocketRequester();
     @Autowired
     private MyInfo myInfo;
-
+    private final List<String> itemCodeList = List.of("1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+            "11", "12", "13", "14", "15", "16", "17", "18", "19", "20");
     public Code prepay(String id, String authCode, int itemCode, int quantity) {
         // 선결제 요청
         Info info = socketClients.get(id);
@@ -51,7 +52,11 @@ public class CommunicationService {
              BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
         ) {
-            Map<String, String> items = socketRequester.getItems(myInfo.getInfo().getId(), info.getId(), input, output);
+            Map<String, String> items = new HashMap<>();
+            for (String itemCode : itemCodeList) {
+                int itemNum = socketRequester.getItemByItemCode(Integer.parseInt(itemCode), myInfo.getInfo().getId(), info.getId(), input, output);
+                items.put(itemCode, String.valueOf(itemNum));
+            }
             if (items.isEmpty() | items.containsKey(null)) {
                 throw new IllegalArgumentException("Failed to get items");
             }
