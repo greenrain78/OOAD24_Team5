@@ -29,11 +29,16 @@ public class ManagementController {
         return itemService.getAllItems();
     }
 
-    @GetMapping("/item/{id}")
-    public ResponseEntity<Item> getItemById(@PathVariable Long id) {
-        log.info("get item by id: {}", id);
-        Optional<Item> item = itemService.getItemById(id);
-        return item.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/item/{itemCode}")
+    public ResponseEntity<Item> getItemByItemCode(@PathVariable int itemCode) {
+        log.info("get item by id: {}", itemCode);
+        try {
+            Item item = itemService.getItemByItemCode(itemCode);
+            return ResponseEntity.ok(item);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
     @GetMapping("/client/{id}/items")
     public ResponseEntity<Object> getItemsByDVM(@PathVariable String id) {

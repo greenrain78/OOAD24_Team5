@@ -16,9 +16,7 @@ public class ItemService {
     public List<Item> getAllItems() {
         return itemRepository.findAll();
     }
-    public Optional<Item> getItemById(Long id) {
-        return itemRepository.findById(id);
-    }
+
     public Item getItemByItemCode(int itemCode) {
         Item item = itemRepository.findByItemCode(itemCode);
         if (item == null) {
