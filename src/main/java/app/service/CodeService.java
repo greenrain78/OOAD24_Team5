@@ -26,15 +26,12 @@ public class CodeService {
     @Transactional
     public void deleteExpiredCodes() {
         int ExpiredDays = 30;
-        List<Code> codes = codeRepository.findAll();
+        LocalDateTime time = LocalDateTime.now().minusDays(ExpiredDays);
+        List<Code> codes = codeRepository.findAllByTimeBefore(time);
         for (Code code : codes) {
-            // 오늘 날짜 기준으로 30일 이전 코드 삭제
-            if (code.getTime().isBefore(LocalDateTime.now().minusDays(ExpiredDays))) {
-                // item 복구
-                Item item = itemRepository.findByItemCode(code.getItemCode());
-                item.setQuantity(item.getQuantity() + code.getQuantity());
-                codeRepository.delete(code);
-            }
+            Item item = itemRepository.findByItemCode(code.getItemCode());
+            item.setQuantity(item.getQuantity() + code.getQuantity());
+            codeRepository.delete(code);
         }
     }
 }
