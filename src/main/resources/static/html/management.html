@@ -53,7 +53,7 @@
 
 <script>
     let inventory = [];
-
+    loadData()
     function loadData() {
         fetch('/management/items')
             .then(response => response.json())
@@ -113,7 +113,7 @@
         })
             .then(response => response.json())
             .then(data => {
-                alert(`${item.name} 정보가 업데이트 되었습니다.`);
+                alert(`${data.name} 정보가 업데이트 되었습니다.`);
                 inventory[index].needsUpdate = false;
                 renderTable();
             })

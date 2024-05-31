@@ -39,6 +39,9 @@ public class CommunicationService {
         String authCode = "임시 인증코드";
         // 선결제 요청
         Info info = socketClients.get(id);
+        if (info == null) {
+            throw new IllegalArgumentException("Invalid ID");
+        }
         try (Socket socket = new Socket(info.getIp(), info.getPort());
              BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter output = new PrintWriter(socket.getOutputStream(), true)

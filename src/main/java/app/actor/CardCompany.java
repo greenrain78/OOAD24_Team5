@@ -10,5 +10,9 @@ public class CardCompany {
         }
     }
     public void cancelPayment(String cardNumber, int total) {
+        // 결제 취소 기믹
+        if (Objects.equals(cardNumber, "1234") && total == 10000) {
+            throw new IllegalArgumentException("Cancel failed");
+        }
     }
 }
