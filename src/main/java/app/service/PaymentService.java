@@ -37,7 +37,7 @@ public class PaymentService {
         return new FakeDrink(item.getName(), quantity);
     }
     @Transactional
-    public boolean requestPrePayment(String code, int itemCode, int quantity) {
+    public boolean responsePrePayment(String code, int itemCode, int quantity) {
         Item item = itemRepository.findByItemCode(itemCode);
         if (item == null) {
             return false;   // 상품이 존재하지 않음
