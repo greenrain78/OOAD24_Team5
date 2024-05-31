@@ -11,7 +11,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/socket")
+@RequestMapping("/admin")
 public class AdminController {
 
     @Autowired

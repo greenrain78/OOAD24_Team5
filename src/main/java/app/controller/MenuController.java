@@ -13,19 +13,19 @@ public class MenuController {
         log.info("redirect to /html/menu.html");
         return new RedirectView("/html/menu.html");
     }
-    @GetMapping("/admin")
+    @GetMapping("/management")
     public RedirectView admin(){
         log.info("redirect to /html/management.html");
         return new RedirectView("/html/management.html");
     }
-    @GetMapping("/admin/all")
-    public RedirectView adminAll(){
-        log.info("redirect to /html/all.html");
-        return new RedirectView("/html/all.html");
-    }
-    @GetMapping("/admin/codes")
+    @GetMapping("/management/codes")
     public RedirectView adminCodes(){
         log.info("redirect to /html/codes.html");
         return new RedirectView("/html/codes.html");
+    }
+    @GetMapping("/others")
+    public RedirectView adminAll(){
+        log.info("redirect to /html/all.html");
+        return new RedirectView("/html/all.html");
     }
 }
