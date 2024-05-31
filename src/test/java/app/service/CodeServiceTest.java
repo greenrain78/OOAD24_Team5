@@ -25,8 +25,8 @@ public class CodeServiceTest {
     public void deleteExpiredCodesTest() {
         // given
         LocalDateTime oldDate = LocalDateTime.now().minusDays(31);
-        codeRepository.save(new Code("code1", oldDate, 1, 1));
-        codeRepository.save(new Code("code2", LocalDateTime.now(), 2, 2));
+        codeRepository.save(new Code("code1", oldDate, 9, 1));
+        codeRepository.save(new Code("code2", LocalDateTime.now(), 9, 2));
         // when
         codeService.deleteExpiredCodes();
         // then
