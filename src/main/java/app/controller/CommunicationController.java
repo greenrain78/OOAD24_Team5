@@ -4,6 +4,7 @@ import app.domain.Code;
 import app.domain.Info;
 import app.domain.OrderRequest;
 import app.service.CommunicationService;
+import app.service.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ public class CommunicationController {
 
     @Autowired
     private CommunicationService socketClientService;
+    @Autowired
+    private PaymentService paymentService;
 
     @GetMapping("/client/{id}/items")
     public ResponseEntity<Object> getItemsByDVM(@PathVariable String id) {
@@ -36,7 +39,7 @@ public class CommunicationController {
         log.info("prepay request: {}", orderRequest);
         try {
             log.info("prepay request: {}", orderRequest);
-            Code result = socketClientService.prepay(id, orderRequest);
+            Code result = paymentService.requestPrePayment(id, orderRequest);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("error", e);

@@ -23,20 +23,10 @@ public class CommunicationService {
 
     private final HashMap<String, Info> socketClients = new HashMap<>();
     private final SocketRequester socketRequester = new SocketRequester();
-    private final CardCompany cardCompanyProxy = new CardCompany();
     @Autowired
     private MyInfo myInfo;
-    @Autowired
-    private ItemRepository itemRepository;
 
-    @Transactional(rollbackFor = Exception.class)
-    public Code prepay(String id, OrderRequest orderRequest) {
-        // 요금 차감
-        Item item = itemRepository.findByItemCode(orderRequest.getItemCode());
-        int totalPrice = item.getPrice() * orderRequest.getQuantity();
-        cardCompanyProxy.requestPayment(orderRequest.getCardNumber(), totalPrice);
-        // 인증코드 발급
-        String authCode = "임시 인증코드";
+    public Code prepay(String id, String authCode, int itemCode, int quantity) {
         // 선결제 요청
         Info info = socketClients.get(id);
         if (info == null) {
@@ -46,13 +36,10 @@ public class CommunicationService {
              BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
         ) {
-            Code code = new Code(authCode, LocalDateTime.now(), orderRequest.getItemCode(), orderRequest.getQuantity());
+            Code code = new Code(authCode, LocalDateTime.now(), itemCode, quantity);
             socketRequester.prepay(myInfo.getInfo().getId(), info.getId(), code, input, output);
             return code;
         } catch (Exception e) {
-            // 예외 발생 시 결제 취소
-            cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), totalPrice);
-            log.error("Failed to prepay", e);
             throw new IllegalArgumentException("Failed to prepay");
         }
     }

@@ -1,14 +1,12 @@
 package app.service;
 
 import app.actor.CardCompany;
-import app.domain.Code;
-import app.domain.FakeDrink;
-import app.domain.Item;
+import app.domain.*;
 import app.repository.CodeRepository;
 import app.repository.ItemRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +16,8 @@ public class PaymentService {
     private ItemRepository itemRepository;
     @Autowired
     private CodeRepository codeRepository;
+    @Autowired
+    private CommunicationService communicationService;
     private final CardCompany cardCompanyProxy = new CardCompany();
     @Transactional
     public FakeDrink requestPayment(int itemCode, String cardNumber, int quantity) {
@@ -35,6 +35,24 @@ public class PaymentService {
         item.setQuantity(item.getQuantity() - quantity);
         itemRepository.save(item);
         return new FakeDrink(item.getName(), quantity);
+    }
+    @Transactional
+    public Code requestPrePayment(String id, OrderRequest orderRequest) {
+        // 요금 차감
+        Item item = itemRepository.findByItemCode(orderRequest.getItemCode());
+        int totalPrice = item.getPrice() * orderRequest.getQuantity();
+        cardCompanyProxy.requestPayment(orderRequest.getCardNumber(), totalPrice);
+        // 인증코드 발급
+        String authCode = "임시 인증코드";
+        // 선결제 요청
+        try {
+            return communicationService.prepay(id, authCode, orderRequest.getItemCode(), orderRequest.getQuantity());
+        } catch (Exception e) {
+            // 예외 발생 시 결제 취소
+            cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), totalPrice);
+            throw new IllegalArgumentException("Failed to prepay");
+        }
+
     }
     @Transactional
     public boolean responsePrePayment(String code, int itemCode, int quantity) {

@@ -4,7 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
-
+/*
+ * 소켓 메세지 테스트
+ * - 단순 메세지 생성 및 파싱 테스트
+ * 사용하는 item_code: 7
+ */
 public class SocketMessageTest {
 
     @DisplayName("단순 메세지 생성 테스트 - 성공 케이스")
@@ -33,7 +37,7 @@ public class SocketMessageTest {
     @Test
     public void requestStockMessage() {
         HashMap<String, String> stock = new HashMap<>();
-        stock.put("item_code", "1");
+        stock.put("item_code", "7");
         stock.put("item_num", "3");
         SocketMessage message = new SocketMessage("req_stock", "Team5", "Team1", stock);
         String json = message.toJson();
@@ -43,7 +47,7 @@ public class SocketMessageTest {
     @Test
     public void responseStockMessage() {
         HashMap<String, String> stock = new HashMap<>();
-        stock.put("item_code", "1");
+        stock.put("item_code", "7");
         stock.put("item_num", "3");
         stock.put("coor_x", "14");
         stock.put("coor_y", "15");
@@ -55,7 +59,7 @@ public class SocketMessageTest {
     @Test
     public void requestPaymentMessage() {
         HashMap<String, String> payment = new HashMap<>();
-        payment.put("item_code", "1");
+        payment.put("item_code", "7");
         payment.put("item_num", "3");
         payment.put("cert_code", "a12345");
         SocketMessage message = new SocketMessage("req_prepay", "Team5", "Team1", payment);
@@ -66,7 +70,7 @@ public class SocketMessageTest {
     @Test
     public void responsePaymentMessage() {
         HashMap<String, String> payment = new HashMap<>();
-        payment.put("item_code", "1");
+        payment.put("item_code", "7");
         payment.put("item_num", "3");
         payment.put("availability", "T");
         SocketMessage message = new SocketMessage("resp_prepay", "Team1", "Team5", payment);
