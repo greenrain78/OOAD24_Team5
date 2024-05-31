@@ -33,12 +33,6 @@ public class ManagementController {
         return item.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/item")
-    public Item createItem(@RequestBody Item item) {
-        log.info("create item: {}", item);
-        return itemService.createItem(item);
-    }
-
     @PutMapping("/item/{id}")
     public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody Item itemDetails) {
         log.info("update item: {}", itemDetails);
@@ -50,12 +44,6 @@ public class ManagementController {
         }
     }
 
-    @DeleteMapping("/item/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable Long id) {
-        log.info("delete item by id: {}", id);
-        itemService.deleteItem(id);
-        return ResponseEntity.noContent().build();
-    }
     @GetMapping("/codes")
     public List<Code> getAllCodes() {
         log.info("get all codes");

@@ -16,11 +16,9 @@ public class ItemService {
     public List<Item> getAllItems() {
         return itemRepository.findAll();
     }
-
     public Optional<Item> getItemById(Long id) {
         return itemRepository.findById(id);
     }
-
     public Item getItemByItemCode(int itemCode) {
         Item item = itemRepository.findByItemCode(itemCode);
         if (item == null) {
@@ -28,19 +26,11 @@ public class ItemService {
         }
         return item;
     }
-    public Item createItem(Item item) {
-        return itemRepository.save(item);
-    }
-
     @Transactional
     public Item updateItem(Long id, Item itemDetails) {
         Item item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
         item.setQuantity(itemDetails.getQuantity());
         item.setPrice(itemDetails.getPrice());
         return itemRepository.save(item);
-    }
-
-    public void deleteItem(Long id) {
-        itemRepository.deleteById(id);
     }
 }
