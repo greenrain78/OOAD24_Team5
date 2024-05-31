@@ -20,8 +20,6 @@ public class CommunicationController {
 
     @Autowired
     private CommunicationService socketClientService;
-    @Autowired
-    private PaymentService paymentService;
 
     @GetMapping("/client/{id}/items")
     public ResponseEntity<Object> getItemsByDVM(@PathVariable String id) {
@@ -31,19 +29,6 @@ public class CommunicationController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("error", e);
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-    @PostMapping("/client/{id}/prepay")
-    public ResponseEntity<Object> prepay(@PathVariable String id, @RequestBody OrderRequest orderRequest) {
-        log.info("prepay request: {}", orderRequest);
-        try {
-            log.info("prepay request: {}", orderRequest);
-            Code result = paymentService.requestPrePayment(id, orderRequest);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            log.error("error", e);
-            log.error("error_message: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
