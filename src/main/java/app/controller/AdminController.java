@@ -1,36 +1,22 @@
 package app.controller;
 
-import app.domain.Code;
 import app.domain.Info;
-import app.domain.OrderRequest;
 import app.service.CommunicationService;
-import app.service.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
 @RequestMapping("/socket")
-public class CommunicationController {
+public class AdminController {
 
     @Autowired
     private CommunicationService communicationService;
 
-    @GetMapping("/client/{id}")
-    public ResponseEntity<Object> getInfoByDVM(@PathVariable String id) {
-        log.info("getInfoByDVM: {}", id);
-        try {
-            Info result = communicationService.getInfoByID(id);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
     @GetMapping("/clients")
     public List<Info> getAllDVM() {
         log.info("getAllDVM");

@@ -1,15 +1,12 @@
 package app.socket;
 
 import app.domain.Code;
-import app.domain.OrderRequest;
 import app.domain.SocketMessage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class SocketRequester {
     public int getItemByItemCode(int itemCode, String myId, String dstId, BufferedReader input, PrintWriter output) {
