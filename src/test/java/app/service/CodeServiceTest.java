@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @SpringBootTest
 public class CodeServiceTest {
     @Autowired
-    private CodeService codeService;
+    private ManagementService managementService;
     @Autowired
     private CodeRepository codeRepository;
     @Autowired
@@ -28,7 +28,7 @@ public class CodeServiceTest {
         codeRepository.save(new Code("code1", oldDate, 9, 1));
         codeRepository.save(new Code("code2", LocalDateTime.now(), 9, 2));
         // when
-        codeService.deleteExpiredCodes();
+        managementService.deleteExpiredCodes();
         // then
         Code code1 = codeRepository.findByCode("code1");
         Code code2 = codeRepository.findByCode("code2");
@@ -43,7 +43,7 @@ public class CodeServiceTest {
         codeRepository.save(new Code("code1", oldDate, 999, 1));
         itemRepository.save(new Item("item1", 999, 10));
         // when
-        codeService.deleteExpiredCodes();
+        managementService.deleteExpiredCodes();
         // then
         Code code1 = codeRepository.findByCode("code1");
         Item item1 = itemRepository.findByItemCode(999);

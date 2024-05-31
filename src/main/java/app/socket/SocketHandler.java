@@ -3,7 +3,7 @@ package app.socket;
 import app.domain.Item;
 import app.domain.MyInfo;
 import app.domain.SocketMessage;
-import app.service.ItemService;
+import app.service.ManagementService;
 import app.service.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 @Component
 public class SocketHandler {
     @Autowired
-    private ItemService itemService;
+    private ManagementService managementService;
 
     @Autowired
     private PaymentService paymentService;
@@ -28,7 +28,7 @@ public class SocketHandler {
         log.info("responseStock: {}", msg);
         // item 조회
         int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
-        Item item = itemService.getItemByItemCode(itemCode);
+        Item item = managementService.getItemByItemCode(itemCode);
         // 응답 메세지 생성
         HashMap<String, String> content = new HashMap<>();
         content.put("item_code", String.valueOf(item.getItemCode()));

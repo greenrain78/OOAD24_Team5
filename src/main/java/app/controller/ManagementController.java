@@ -2,9 +2,8 @@ package app.controller;
 
 import app.domain.Code;
 import app.domain.Item;
-import app.service.CodeService;
 import app.service.CommunicationService;
-import app.service.ItemService;
+import app.service.ManagementService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,22 +16,20 @@ import java.util.Map;
 public class ManagementController {
 
     @Autowired
-    private ItemService itemService;
-    @Autowired
-    private CodeService codeService;
+    private ManagementService managementService;
     @Autowired
     private CommunicationService communicationService;
     @GetMapping("/items")
     public List<Item> getAllItems() {
         log.info("get all items");
-        return itemService.getAllItems();
+        return managementService.getAllItems();
     }
 
     @GetMapping("/item/{itemCode}")
     public ResponseEntity<Item> getItemByItemCode(@PathVariable int itemCode) {
         log.info("get item by id: {}", itemCode);
         try {
-            Item item = itemService.getItemByItemCode(itemCode);
+            Item item = managementService.getItemByItemCode(itemCode);
             return ResponseEntity.ok(item);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -66,7 +63,7 @@ public class ManagementController {
     public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody Item itemDetails) {
         log.info("update item: {}", itemDetails);
         try {
-            Item updatedItem = itemService.updateItem(id, itemDetails);
+            Item updatedItem = managementService.updateItem(id, itemDetails);
             return ResponseEntity.ok(updatedItem);
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
@@ -76,6 +73,6 @@ public class ManagementController {
     @GetMapping("/codes")
     public List<Code> getAllCodes() {
         log.info("get all codes");
-        return codeService.getAllCodes();
+        return managementService.getAllCodes();
     }
 }

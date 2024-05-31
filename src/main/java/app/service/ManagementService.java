@@ -12,12 +12,30 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class CodeService {
+public class ManagementService {
     @Autowired
     private CodeRepository codeRepository;
     @Autowired
     private ItemRepository itemRepository;
 
+    public List<Item> getAllItems() {
+        return itemRepository.findAll();
+    }
+
+    public Item getItemByItemCode(int itemCode) {
+        Item item = itemRepository.findByItemCode(itemCode);
+        if (item == null) {
+            throw new IllegalArgumentException("Item not found");
+        }
+        return item;
+    }
+    @Transactional
+    public Item updateItem(Long id, Item itemDetails) {
+        Item item = itemRepository.findById(id).orElseThrow(() -> new RuntimeException("Item not found"));
+        item.setQuantity(itemDetails.getQuantity());
+        item.setPrice(itemDetails.getPrice());
+        return itemRepository.save(item);
+    }
     public List<Code> getAllCodes() {
         return codeRepository.findAll();
     }
