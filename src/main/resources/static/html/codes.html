@@ -27,7 +27,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        fetch('management/codes')
+        fetch('/codes')
             .then(response => response.json())
             .then(data => {
                 const tableBody = document.getElementById('codeTableBody');

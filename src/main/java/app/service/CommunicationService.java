@@ -61,6 +61,18 @@ public class CommunicationService {
             throw new IllegalArgumentException("Connection failed");
         }
     }
+    public int getItemByItemCode(String id, int itemCode) {
+        Info info = getInfoByID(id);
+        try (Socket socket = new Socket(info.getIp(), info.getPort());
+             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
+        ) {
+            return socketRequester.getItemByItemCode(itemCode, myInfo.getInfo().getId(), info.getId(), input, output);
+        } catch (IOException e) {
+            log.error("Connection failed", e);
+            throw new IllegalArgumentException("Connection failed");
+        }
+    }
     public Info getInfoByID(String id) {
         Info info = socketClients.get(id);
         if (info == null) {

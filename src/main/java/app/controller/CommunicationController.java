@@ -21,17 +21,6 @@ public class CommunicationController {
     @Autowired
     private CommunicationService communicationService;
 
-    @GetMapping("/client/{id}/items")
-    public ResponseEntity<Object> getItemsByDVM(@PathVariable String id) {
-        log.info("getItemsByDVM: {}", id);
-        try {
-            Map<String, String> result = communicationService.getItems(id);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            log.error("error", e);
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
     @GetMapping("/client/{id}")
     public ResponseEntity<Object> getInfoByDVM(@PathVariable String id) {
         log.info("getInfoByDVM: {}", id);
