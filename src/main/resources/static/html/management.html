@@ -55,7 +55,7 @@
     let inventory = [];
     loadData()
     function loadData() {
-        fetch('/management')
+        fetch('/management/items')
             .then(response => response.json())
             .then(data => {
                 console.log(data);
@@ -106,14 +106,14 @@
         console.log("updateItem");
         console.log(`ITEM: ${item.name}, QUANTITY: ${item.quantity}, PRICE: ${item.price}`)
         console.log(item);
-        fetch(`/management/${item.id}`, {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(item)
-           })
+        fetch(`/management/item/${item.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(item)
+        })
             .then(response => response.json())
             .then(data => {
-                alert(`${item.name} 정보가 업데이트 되었습니다.`);
+                alert(`${data.name} 정보가 업데이트 되었습니다.`);
                 inventory[index].needsUpdate = false;
                 renderTable();
             })
@@ -123,4 +123,3 @@
 
 </body>
 </html>
-

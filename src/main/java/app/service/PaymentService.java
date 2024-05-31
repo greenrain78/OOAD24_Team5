@@ -1,6 +1,6 @@
 package app.service;
 
-import app.adapter.CardCompany;
+import app.actor.CardCompany;
 import app.domain.Code;
 import app.domain.FakeDrink;
 import app.domain.Item;
@@ -9,6 +9,8 @@ import app.repository.ItemRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 public class PaymentService {
@@ -28,16 +30,14 @@ public class PaymentService {
         }
         // 결제 요청
         int totalPrice = item.getPrice() * quantity;
-        if (!cardCompanyProxy.requestPayment(cardNumber, totalPrice)) {
-            throw new IllegalArgumentException("Payment failed");
-        }
+        cardCompanyProxy.requestPayment(cardNumber, totalPrice);
         // 상품 수량 감소
         item.setQuantity(item.getQuantity() - quantity);
         itemRepository.save(item);
         return new FakeDrink(item.getName(), quantity);
     }
     @Transactional
-    public boolean requestPrePayment(int itemCode, int quantity) {
+    public boolean requestPrePayment(String code, int itemCode, int quantity) {
         Item item = itemRepository.findByItemCode(itemCode);
         if (item == null) {
             return false;   // 상품이 존재하지 않음
@@ -48,9 +48,12 @@ public class PaymentService {
         // 상품 수량 감소
         item.setQuantity(item.getQuantity() - quantity);
         itemRepository.save(item);
+        // 인증코드 저장
+        codeRepository.save(new Code(code, LocalDateTime.now(), itemCode, quantity));
         return true;
     }
 
+    @Transactional
     public FakeDrink requestPickup(String cert_code) {
         Code code = codeRepository.findByCode(cert_code);
         if (code == null) {

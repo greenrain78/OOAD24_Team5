@@ -8,7 +8,6 @@ import app.repository.ItemRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
@@ -29,7 +28,7 @@ public class PaymentServiceTest {
         String cert_code = "1234";
         int itemCode = 901;
         int quantity = 1;
-        itemRepository.save(new Item("pick up test", 1000, itemCode));
+        itemRepository.save(new Item("pick up test", itemCode, 1000));
         codeRepository.save(new Code(cert_code, LocalDateTime.now(), itemCode, quantity));
         // when
         FakeDrink result = paymentService.requestPickup(cert_code);

@@ -1,6 +1,5 @@
 package app.socket;
 
-import app.controller.SocketServerController;
 import app.domain.SocketMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -26,20 +25,20 @@ import java.util.Objects;
 public class SocketServerTest {
 
     @Autowired
-    private SocketServerController controller;
+    private SocketHandler controller;
     private static SocketServer otherServer;
 
-    public void setUp() {
+    public void setUp() throws InterruptedException {
         // 소켓 서버가 실행 중이 아니면 실행
         if (otherServer == null) {
             otherServer = new SocketServer(8080, controller);
-            otherServer.run();
+            otherServer.start();
+            Thread.sleep(1000);
         }
     }
-
     @DisplayName("별도 생성된 소켓 서버 테스트 - 조회")
     @Test
-    public void testSocketServer() {
+    public void testSocketServer() throws InterruptedException {
         setUp();
         try (Socket socket = new Socket("localhost", 8080);
              BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -56,11 +55,11 @@ public class SocketServerTest {
             assert Objects.equals(resp.msg_type(), "resp_stock") : "응답: " + resp.toJson();
             assert Objects.equals(resp.src_id(), "team5") : "응답: " + resp.toJson();
             assert Objects.equals(resp.dst_id(), "team1") : "응답: " + resp.toJson();
-            assert Objects.equals(resp.msg_content().get("item_code"), "1") : "응답: " + resp.toJson();
+            assert Objects.equals(resp.msg_content().get("item_code"), "4") : "응답: " + resp.toJson();
             assert Objects.equals(resp.msg_content().get("item_num"), "10") : "응답: " + resp.toJson();
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

@@ -21,7 +21,7 @@ public class Code {
 
 
     @NotNull
-    @Column(name = "CODE")
+    @Column(name = "CODE", unique = true)
     private String code;
 
 
@@ -30,7 +30,7 @@ public class Code {
     private LocalDateTime time;
 
     @NotNull
-    @Column(name = "ITEM_CODE", unique = true) // 이거의 의미를 잘 모르겠음 id로 대체하던가 별도의 FK로 대체하던가 해야할듯
+    @Column(name = "ITEM_CODE") // 이거의 의미를 잘 모르겠음 id로 대체하던가 별도의 FK로 대체하던가 해야할듯
     private int itemCode;
 
     @NotNull

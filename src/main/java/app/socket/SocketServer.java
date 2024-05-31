@@ -1,32 +1,27 @@
 package app.socket;
 
-import app.controller.SocketServerController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.net.ServerSocket;
 import java.net.Socket;
-public class SocketServer {
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    private final SocketServerController controller;
+@Slf4j
+public class SocketServer extends Thread {
+    private final SocketHandler handler;
     private final int port;
 
-    public SocketServer(int port, SocketServerController controller) {
-        this.controller = controller;
+    public SocketServer(int port, SocketHandler handler) {
+        this.handler = handler;
         this.port = port;
     }
     public void run() {
-        System.out.println("Server is starting" + port);
-        new Thread(() -> {
-            try (ServerSocket serverSocket = new ServerSocket(port)) {
-                System.out.println("Server is listening on port " + port);
-                while (true) {
-                    Socket socket = serverSocket.accept();
-                    new SocketThread(socket, controller).start();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            log.info("Socket Server is listening on port " + port);
+            while (true) {
+                Socket socket = serverSocket.accept();
+                new SocketThread(socket, handler).start();
             }
-        }).start();
+        } catch (Exception e) {
+            log.error("Error starting server", e);
+        }
     }
 }

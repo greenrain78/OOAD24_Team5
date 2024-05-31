@@ -1,0 +1,13 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      MY_PORT: 7777
+
+networks:	#네트워크 설정
+  starbucks_network_02:
