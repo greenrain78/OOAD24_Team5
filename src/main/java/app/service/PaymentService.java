@@ -42,8 +42,8 @@ public class PaymentService {
         Item item = itemRepository.findByItemCode(orderRequest.getItemCode());
         int totalPrice = item.getPrice() * orderRequest.getQuantity();
         cardCompanyProxy.requestPayment(orderRequest.getCardNumber(), totalPrice);
-        // 인증코드 발급
-        String authCode = "임시 인증코드";
+        // 랜덤한 uuid 인증코드 발급
+        String authCode = java.util.UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6);
         // 선결제 요청
         try {
             return communicationService.prepay(id, authCode, orderRequest.getItemCode(), orderRequest.getQuantity());
