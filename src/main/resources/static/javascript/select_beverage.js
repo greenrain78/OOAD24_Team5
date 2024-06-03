@@ -1,18 +1,31 @@
-let beverage = ["콜라","사이다","녹차","홍차","밀크티","탄산수","보리차","캔커피","물","에너지드링크","유자차","식혜","아이스티","딸기주스","오렌지주스","포도주스","이온음료","아메리카노","핫초코","카페라떼"]
-let beverage_cost = [1000,1000,1500,1500,2000,500,1500,1500,500,2000,1500,1500,1500,2000,2000,2000,1000,1500,1500,1500];
+//let beverage = ["콜라","사이다","녹차","홍차","밀크티","탄산수","보리차","캔커피","물","에너지드링크","유자차","식혜","아이스티","딸기주스","오렌지주스","포도주스","이온음료","아메리카노","핫초코","카페라떼"]
+var beverage = [];
 var count=0;
 var count_limit=5;
 var cur_item_code=0;
 
+async function fetch_beverage(){
+	fetch('/management/items')
+	.then(response => response.json())
+	.then(data => {
+		console.log(data);
+		beverage = data.map(item => ({...item, needsUpdate: false}));
+	})
+	.catch(error => console.error(error));
+}
+
 $(document).ready(function(){
-	$(".drink-item").each(function(index){
+
+	fetch_beverage();
+
+	$(".drink-item").each(function(){	
 		var item_code=$(this).attr("id");
-		$(this).children().last().text(beverage[item_code-1]);
+		$(this).children().last().text(beverage[item_code-1].name);
 	})
 
 	$(".drink-item").on("click",function(){
 		cur_item_code = $(this).attr("id");
-		$("#item_info").text(beverage[cur_item_code-1]+" "+beverage_cost[cur_item_code-1]+"원");
+		$("#item_info").text(beverage[cur_item_code-1].name+" "+beverage_cost[cur_item_code-1].price+"원");
 		count=0;
 		$("#counter-value").text(count+"/"+count_limit);
 		$("#total").text(0);
@@ -36,7 +49,7 @@ $(document).ready(function(){
 	})
 
 	$("#home-icon").on("click",function(){
-		location.href="127.0.0.1/menu.html";
+		location.href="menu.html";
 	});
 })
 

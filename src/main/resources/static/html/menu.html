@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>대충 자판기</title>
     <link rel="stylesheet" href="../css/menu.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="../javascript/menu.js"></script>
 </head>
 <body>
     <div class="container">
@@ -12,14 +14,13 @@
         <div class="buttons">
             <div class="button">
                 <div class="icon"><img src="../image/buy_drink.png" alt="Buy Drink Icon"></div>
-                <button>Buy Drink</button>
+                <button id="select_beverage">Buy Drink</button>
             </div>
             <div class="button">
                 <div class="icon"><img src="../image/get_drink.png" alt="Receive Drink Icon"></div>
-                <button>Receive Drink</button>
+                <button id="authcode">Receive Drink</button>
             </div>
         </div>
     </div>
-    <button class="settings-button"><img src="../image/admin.png" alt="Settings Icon"></button>
 </body>
 </html>
