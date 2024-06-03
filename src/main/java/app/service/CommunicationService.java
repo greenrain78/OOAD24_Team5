@@ -69,20 +69,22 @@ public class CommunicationService {
             throw new IllegalArgumentException("Connection failed");
         }
     }
-    public int getItemByItemCode(String id, int itemCode) {
-        Info info = socketClients.get(id);
-        if (info == null) {
-            throw new IllegalArgumentException("Not found");
+    public HashMap<String, Integer> getItemByItemCode(int itemCode) {
+        // 모든 자판기에 대해서 itemCode에 해당하는 재고 조회
+        HashMap<String, Integer> items = new HashMap<>();
+        for (Info info : socketClients.values()) {
+            try (Socket socket = new Socket(info.getIp(), info.getPort());
+                 BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                 PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
+            ) {
+                int itemNum = socketRequester.getItemByItemCode(itemCode, myInfo.getInfo().getId(), info.getId(), input, output);
+                items.put(info.getId(), itemNum);
+            } catch (IOException e) {
+                log.error("Connection failed", e);
+                items.put(info.getId(), -1);
+            }
         }
-        try (Socket socket = new Socket(info.getIp(), info.getPort());
-             BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-             PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
-        ) {
-            return socketRequester.getItemByItemCode(itemCode, myInfo.getInfo().getId(), info.getId(), input, output);
-        } catch (IOException e) {
-            log.error("Connection failed", e);
-            throw new IllegalArgumentException("Connection failed");
-        }
+        return items;
     }
 
     public List<Info> getAllInfo() {

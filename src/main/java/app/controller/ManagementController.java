@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @Slf4j
@@ -47,11 +48,11 @@ public class ManagementController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @GetMapping("/client/{id}/item/{itemCode}")
-    public ResponseEntity<Object> getItemByDVM(@PathVariable String id, @PathVariable int itemCode) {
-        log.info("getItemsByDVM: {}", id);
+    @GetMapping("/client/item/{itemCode}")
+    public ResponseEntity<Object> getItemByDVM(@PathVariable int itemCode) {
+        log.info("getItemByDVM: {}", itemCode);
         try {
-            int result = communicationService.getItemByItemCode(id, itemCode);
+            HashMap<String, Integer> result = communicationService.getItemByItemCode(itemCode);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("error", e);
