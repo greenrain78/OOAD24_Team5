@@ -46,6 +46,30 @@ public class CommunicationService {
             throw new IllegalArgumentException("Failed to prepay");
         }
     }
+    public Code prepay(String authCode, int itemCode, int quantity) {
+        // 거리순으로 자판기 정렬
+        List<Info> infos = new ArrayList<>(socketClients.values());
+        infos.sort((a, b) -> {
+            double aDist = Math.pow(a.getX() - myInfo.getInfo().getX(), 2) + Math.pow(a.getY() - myInfo.getInfo().getY(), 2);
+            double bDist = Math.pow(b.getX() - myInfo.getInfo().getX(), 2) + Math.pow(b.getY() - myInfo.getInfo().getY(), 2);
+            return Double.compare(aDist, bDist);
+        });
+        // 선결제 요청
+        for (Info info : infos) {
+            log.info("try to prepay to {}:{} distance: {}", info.getIp(), info.getPort(), Math.sqrt(Math.pow(info.getX() - myInfo.getInfo().getX(), 2) + Math.pow(info.getY() - myInfo.getInfo().getY(), 2)));
+            try (Socket socket = new Socket(info.getIp(), info.getPort());
+                 BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                 PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
+            ) {
+                Code code = new Code(authCode, LocalDateTime.now(), itemCode, quantity);
+                socketRequester.prepay(myInfo.getInfo().getId(), info.getId(), code, input, output);
+                return code;
+            } catch (Exception e) {
+                log.error("Connection failed", e);
+            }
+        }
+        throw new IllegalArgumentException("Failed to prepay");
+    }
     public Map<String, String> getItems(String id) {
         Info info = socketClients.get(id);
         if (info == null) {

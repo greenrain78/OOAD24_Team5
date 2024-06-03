@@ -52,7 +52,23 @@ public class PaymentService {
             cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), totalPrice);
             throw new IllegalArgumentException("Failed to prepay");
         }
-
+    }
+    @Transactional
+    public Code requestPrePayment(OrderRequest orderRequest) {
+        // 요금 차감
+        Item item = itemRepository.findByItemCode(orderRequest.getItemCode());
+        int totalPrice = item.getPrice() * orderRequest.getQuantity();
+        cardCompanyProxy.requestPayment(orderRequest.getCardNumber(), totalPrice);
+        // 랜덤한 uuid 인증코드 발급
+        String authCode = java.util.UUID.randomUUID().toString().replaceAll("-", "").substring(0, 6);
+        // 선결제 요청
+        try {
+            return communicationService.prepay(authCode, orderRequest.getItemCode(), orderRequest.getQuantity());
+        } catch (Exception e) {
+            // 예외 발생 시 결제 취소
+            cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), totalPrice);
+            throw new IllegalArgumentException("Failed to prepay");
+        }
     }
     @Transactional
     public boolean responsePrePayment(String code, int itemCode, int quantity) {
