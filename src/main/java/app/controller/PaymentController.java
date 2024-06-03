@@ -43,6 +43,19 @@ public class PaymentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @PostMapping("/prepay")
+    public ResponseEntity<Object> prepayAll(@RequestBody OrderRequest orderRequest) {
+        log.info("prepay request: {}", orderRequest);
+        try {
+            log.info("prepay request: {}", orderRequest);
+            Code result = paymentService.requestPrePayment(orderRequest);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            log.error("error", e);
+            log.error("error_message: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     @PostMapping("/pickup")
     public ResponseEntity<Object> pickup(@RequestBody String cert_code) {
         log.info("pickup request: {}", cert_code);
