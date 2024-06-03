@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>인증 코드 입력</title>
     <link rel="stylesheet" href="../css/authcode.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="../javascript/authcode.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="input-group">
             <img src="../image/auth.png" alt="Certificate Icon" class="icon">
-            <input type="text" placeholder="인증코드를 입력하세요" class="input-field">
+            <input type="text" placeholder="인증코드를 입력하세요" class="input-field" id="input">
         </div>
         <button class="submit-button">확인</button>
+        <button class="cancel-button">취소</button>
     </div>
 </body>
 </html>
