@@ -61,10 +61,10 @@ public class SocketThread extends Thread {
             // 요청 처리
             switch (msg.msg_type()) {
                 case "req_stock":
-                    handler.requestStock(msg, output);
+                    handler.responseStock(msg, output);
                     break;
                 case "req_prepay":
-                    handler.requestPayment(msg, output);
+                    handler.responsePayment(msg, output);
                     break;
                 default:
                     log.error("Unknown message type: " + clientMessage);

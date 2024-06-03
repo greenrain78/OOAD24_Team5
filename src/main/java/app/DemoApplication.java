@@ -14,5 +14,4 @@ public class DemoApplication {
 		// http://127.0.0.1:8080/h2-console == h2-console로 접속
 		// http://127.0.0.1:8080/swagger-ui/index.html == swagger로 접속
 	}
-
 }
