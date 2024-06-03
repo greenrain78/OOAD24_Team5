@@ -34,7 +34,6 @@ public class PaymentController {
     public ResponseEntity<Object> prepay(@PathVariable String id, @RequestBody OrderRequest orderRequest) {
         log.info("prepay request: {}", orderRequest);
         try {
-            log.info("prepay request: {}", orderRequest);
             Code result = paymentService.requestPrePayment(id, orderRequest);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
@@ -47,7 +46,6 @@ public class PaymentController {
     public ResponseEntity<Object> prepayAll(@RequestBody OrderRequest orderRequest) {
         log.info("prepay request: {}", orderRequest);
         try {
-            log.info("prepay request: {}", orderRequest);
             Code result = paymentService.requestPrePayment(orderRequest);
             return ResponseEntity.ok(result);
         } catch (Exception e) {

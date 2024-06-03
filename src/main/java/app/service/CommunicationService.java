@@ -56,6 +56,7 @@ public class CommunicationService {
         });
         // 선결제 요청
         for (Info info : infos) {
+            log.info("try to prepay to {}:{} distance: {}", info.getIp(), info.getPort(), Math.sqrt(Math.pow(info.getX() - myInfo.getInfo().getX(), 2) + Math.pow(info.getY() - myInfo.getInfo().getY(), 2)));
             try (Socket socket = new Socket(info.getIp(), info.getPort());
                  BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                  PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
