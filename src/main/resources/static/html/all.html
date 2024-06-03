@@ -51,7 +51,7 @@
 </table>
 
 <script>
-    fetch('/socket/clients')
+    fetch('/admin/clients')
         .then(response => response.json())
         .then(data => {
             const vendingMachineIds = data.map(item => item.id);
@@ -71,7 +71,7 @@
 
     async function fetchVendingMachineData(id) {
         try {
-            const response = await fetch(`/socket/client/${id}/items`);
+            const response = await fetch(`/client/${id}/items`);
             if (!response.ok) {
                 throw new Error(`Error fetching data for ${id}: ${response.statusText}`);
             }
