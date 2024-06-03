@@ -47,7 +47,10 @@ public class CommunicationService {
         }
     }
     public Map<String, String> getItems(String id) {
-        Info info = getInfoByID(id);
+        Info info = socketClients.get(id);
+        if (info == null) {
+            throw new IllegalArgumentException("Not found");
+        }
         try (Socket socket = new Socket(info.getIp(), info.getPort());
              BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
@@ -67,7 +70,10 @@ public class CommunicationService {
         }
     }
     public int getItemByItemCode(String id, int itemCode) {
-        Info info = getInfoByID(id);
+        Info info = socketClients.get(id);
+        if (info == null) {
+            throw new IllegalArgumentException("Not found");
+        }
         try (Socket socket = new Socket(info.getIp(), info.getPort());
              BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
@@ -78,13 +84,7 @@ public class CommunicationService {
             throw new IllegalArgumentException("Connection failed");
         }
     }
-    public Info getInfoByID(String id) {
-        Info info = socketClients.get(id);
-        if (info == null) {
-            throw new IllegalArgumentException("Not found");
-        }
-        return info;
-    }
+
     public List<Info> getAllInfo() {
         return new ArrayList<>(socketClients.values());
     }
