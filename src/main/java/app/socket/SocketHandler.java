@@ -3,7 +3,7 @@ package app.socket;
 import app.domain.Item;
 import app.domain.MyInfo;
 import app.domain.SocketMessage;
-import app.service.ItemService;
+import app.service.ManagementService;
 import app.service.PaymentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 @Component
 public class SocketHandler {
     @Autowired
-    private ItemService itemService;
+    private ManagementService managementService;
 
     @Autowired
     private PaymentService paymentService;
@@ -24,11 +24,11 @@ public class SocketHandler {
     @Autowired
     private MyInfo myInfo;
 
-    public void requestStock(SocketMessage msg, PrintWriter output) {
-        log.info("requestStock: {}", msg);
+    public void responseStock(SocketMessage msg, PrintWriter output) {
+        log.info("responseStock: {}", msg);
         // item 조회
         int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
-        Item item = itemService.getItemByItemCode(itemCode);
+        Item item = managementService.getItemByItemCode(itemCode);
         // 응답 메세지 생성
         HashMap<String, String> content = new HashMap<>();
         content.put("item_code", String.valueOf(item.getItemCode()));
@@ -37,13 +37,13 @@ public class SocketHandler {
         output.println(response.toJson());
 
     }
-    public void requestPayment(SocketMessage msg, PrintWriter output) {
-        log.info("requestPayment: {}", msg);
+    public void responsePayment(SocketMessage msg, PrintWriter output) {
+        log.info("responsePayment: {}", msg);
         // 결제 요청
         int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
         int quantity = Integer.parseInt(msg.msg_content().get("quantity"));
         String code = msg.msg_content().get("cert_code");
-        boolean result = paymentService.requestPrePayment(code, itemCode, quantity);
+        boolean result = paymentService.responsePrePayment(code, itemCode, quantity);
         // 응답 메세지 생성
         HashMap<String, String> content = new HashMap<>();
         content.put("item_code", String.valueOf(itemCode));

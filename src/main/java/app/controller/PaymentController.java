@@ -1,5 +1,6 @@
 package app.controller;
 
+import app.domain.Code;
 import app.domain.FakeDrink;
 import app.domain.OrderRequest;
 import app.service.PaymentService;
@@ -28,6 +29,19 @@ public class PaymentController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
+    }
+    @PostMapping("/prepay/{id}")
+    public ResponseEntity<Object> prepay(@PathVariable String id, @RequestBody OrderRequest orderRequest) {
+        log.info("prepay request: {}", orderRequest);
+        try {
+            log.info("prepay request: {}", orderRequest);
+            Code result = paymentService.requestPrePayment(id, orderRequest);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            log.error("error", e);
+            log.error("error_message: {}", e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
     @PostMapping("/pickup")
     public ResponseEntity<Object> pickup(@RequestBody String cert_code) {
