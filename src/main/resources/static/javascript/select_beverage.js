@@ -85,7 +85,7 @@ $(document).ready(function(){
 		else{
 			OrderRequest.itemCode=cur_item_code;
 			OrderRequest.quantity=count;
-			localStorage.setItem('OrderRequest',OrderRequest);
+			localStorage.setItem('OrderRequest',JSON.stringify(OrderRequest));
 			if(beverage[cur_item_code-1].quantity==0){
 				localStorage.setItem('prepay_notice',true);
 			}
