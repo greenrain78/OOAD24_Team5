@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+
 @Slf4j
 @RestController
 @RequestMapping("/payment")
@@ -34,7 +37,7 @@ public class PaymentController {
     public ResponseEntity<Object> prepay(@RequestBody OrderRequest orderRequest) {
         log.info("prepay request: {}", orderRequest);
         try {
-            Code result = paymentService.requestPrePayment(orderRequest);
+            HashMap<String, Object> result = paymentService.requestPrePayment(orderRequest);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("error", e);
