@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 @Service
 public class PaymentService {
@@ -38,7 +39,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public Code requestPrePayment(OrderRequest orderRequest) {
+    public HashMap<String, Object> requestPrePayment(OrderRequest orderRequest) {
         // 요금 차감
         Item item = itemRepository.findByItemCode(orderRequest.getItemCode());
         int totalPrice = item.getPrice() * orderRequest.getQuantity();
