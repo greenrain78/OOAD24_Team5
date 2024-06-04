@@ -30,8 +30,8 @@ body {
 }
 
 .home-icon {
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
     margin-right: 10px;
     float:left;
     cursor: pointer;
@@ -45,7 +45,7 @@ body {
 
 .drink-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 10px;
 }
 
@@ -81,7 +81,15 @@ body {
 	background-color: white;
 	padding:30px 20px;
 	z-index:1;
-	width:400px;
+	width:600px;
 	height:400px;
 	border:1px solid black;
+}
+
+.visible{
+    display:block;
+}
+
+#prepay_notice{
+    font-weight: bold;
 }
