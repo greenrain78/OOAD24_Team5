@@ -30,20 +30,8 @@ public class PaymentController {
         }
 
     }
-    @PostMapping("/prepay/{id}")
-    public ResponseEntity<Object> prepay(@PathVariable String id, @RequestBody OrderRequest orderRequest) {
-        log.info("prepay request: {}", orderRequest);
-        try {
-            Code result = paymentService.requestPrePayment(id, orderRequest);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            log.error("error", e);
-            log.error("error_message: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
     @PostMapping("/prepay")
-    public ResponseEntity<Object> prepayAll(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<Object> prepay(@RequestBody OrderRequest orderRequest) {
         log.info("prepay request: {}", orderRequest);
         try {
             Code result = paymentService.requestPrePayment(orderRequest);
