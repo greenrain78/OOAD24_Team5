@@ -50,7 +50,7 @@ $(document).ready(function(){
 	})
 
 	$(".counter-button").on("click",function(){
-		if(count_limit>beverage[cur_item_code-1].quantity){
+		if(count_limit>beverage[cur_item_code-1].quantity && beverage[cur_item_code-1].quantity!=0){
 			if($(this).attr("id")=="add"){
 				if(count<beverage[cur_item_code-1].quantity) count++;
 			}else{
