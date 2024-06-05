@@ -16,7 +16,7 @@ async function PickupRequest(inputValue){
     PickupResponse = await response.json();
     localStorage.setItem('PickupResponse', JSON.stringify(PickupResponse));
     console.log(PickupResponse);
-    //location.href = "Pickupresult.html";
+    location.href = "Pickupresult.html";
 }
 
 $(document).ready(function(){
