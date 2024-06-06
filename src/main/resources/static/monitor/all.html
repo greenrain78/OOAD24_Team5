@@ -71,7 +71,7 @@
 
     async function fetchVendingMachineData(id) {
         try {
-            const response = await fetch(`/client/${id}/items`);
+            const response = await fetch(`/admin/items/${id}`);
             if (!response.ok) {
                 throw new Error(`Error fetching data for ${id}: ${response.statusText}`);
             }
