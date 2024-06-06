@@ -67,6 +67,13 @@ public class CommunicationService {
             ) {
                 Code code = new Code(authCode, LocalDateTime.now(), itemCode, quantity);
                 socketRequester.prepay(myInfo.getInfo().getId(), info.getId(), code, input, output);
+                HashMap<String, Object> result = new HashMap<>();
+                result.put("code", code);
+                result.put("info", info);
+                result.put("x", availableClient.msg_content().get("coor_x"));
+                result.put("y", availableClient.msg_content().get("coor_y"));
+                return result;
+
             } catch (IOException e) {
                 log.error("선결제 요청 중 선결제 실패", e);
             }

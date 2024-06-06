@@ -52,7 +52,7 @@ public class PaymentService {
         } catch (Exception e) {
             // 예외 발생 시 결제 취소
             cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), totalPrice);
-            throw new IllegalArgumentException("Failed to prepay");
+            throw new IllegalArgumentException("Failed to prepay", e);
         }
     }
     @Transactional
