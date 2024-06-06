@@ -52,11 +52,11 @@ public class SocketServerTest {
             output.println(message.toJson());
             // 응답 확인
             SocketMessage resp = SocketMessage.fromJson(input.readLine());
-            assert Objects.equals(resp.msg_type(), "resp_stock") : "응답: " + resp.toJson();
-            assert Objects.equals(resp.src_id(), "team5") : "응답: " + resp.toJson();
-            assert Objects.equals(resp.dst_id(), "team1") : "응답: " + resp.toJson();
-            assert Objects.equals(resp.msg_content().get("item_code"), "4") : "응답: " + resp.toJson();
-            assert Objects.equals(resp.msg_content().get("item_num"), "10") : "응답: " + resp.toJson();
+            assert Objects.equals(resp.getMsg_type(), "resp_stock") : "응답: " + resp.toJson();
+            assert Objects.equals(resp.getSrc_id(), "team5") : "응답: " + resp.toJson();
+            assert Objects.equals(resp.getDst_id(), "team1") : "응답: " + resp.toJson();
+            assert Objects.equals(resp.getMsg_content().get("item_code"), "4") : "응답: " + resp.toJson();
+            assert Objects.equals(resp.getMsg_content().get("item_num"), "10") : "응답: " + resp.toJson();
 
         } catch (IOException e) {
             throw new RuntimeException(e);

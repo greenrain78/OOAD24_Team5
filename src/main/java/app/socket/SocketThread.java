@@ -3,17 +3,15 @@ package app.socket;
 
 import app.domain.SocketMessage;
 import com.google.gson.JsonSyntaxException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-
+@Slf4j
 public class SocketThread extends Thread {
     private final Socket socket;
-    private final Logger log = LoggerFactory.getLogger(getClass());
     private final SocketHandler handler;
 
     public SocketThread(Socket socket, SocketHandler handler) {
@@ -54,12 +52,8 @@ public class SocketThread extends Thread {
             return;
         }
         try {
-            // 해당 요청이 유효한지 확인
-            if (!handler.isValidMessage(msg, output)) {
-                return;
-            }
             // 요청 처리
-            switch (msg.msg_type()) {
+            switch (msg.getMsg_type()) {
                 case "req_stock":
                     handler.responseStock(msg, output);
                     break;
@@ -72,7 +66,7 @@ public class SocketThread extends Thread {
             }
         } catch (Exception e) {
             log.error("Error processing message: " + clientMessage, e);
-            output.println(handler.createErrorMessage(msg.src_id(), e).toJson());
+            output.println("{\"msg_type\":\"error\",\"msg_content\":{\"error\":\"" + e.getMessage() + "\",\"error_class\":\"" + e.getClass().getName() + "\"}}");
         }
     }
 }

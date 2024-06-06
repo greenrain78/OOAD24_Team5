@@ -19,7 +19,7 @@ public class PaymentService {
     private CodeRepository codeRepository;
     @Autowired
     private CommunicationService communicationService;
-    private final CardCompany cardCompanyProxy = new CardCompany();
+    private final CardCompany cardCompany = new CardCompany();
     @Transactional
     public FakeDrink requestPayment(int itemCode, String cardNumber, int quantity) {
         Item item = itemRepository.findByItemCode(itemCode);
@@ -31,7 +31,7 @@ public class PaymentService {
         }
         // 결제 요청
         int totalPrice = item.getPrice() * quantity;
-        cardCompanyProxy.requestPayment(cardNumber, totalPrice);
+        cardCompany.requestPayment(cardNumber, totalPrice);
         // 상품 수량 감소
         item.setQuantity(item.getQuantity() - quantity);
         itemRepository.save(item);
@@ -43,7 +43,7 @@ public class PaymentService {
         // 요금 차감
         Item item = itemRepository.findByItemCode(orderRequest.getItemCode());
         int totalPrice = item.getPrice() * orderRequest.getQuantity();
-        cardCompanyProxy.requestPayment(orderRequest.getCardNumber(), totalPrice);
+        cardCompany.requestPayment(orderRequest.getCardNumber(), totalPrice);
         // 랜덤한 uuid 인증코드 발급
         String authCode = java.util.UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
         // 선결제 요청
@@ -51,7 +51,7 @@ public class PaymentService {
             return communicationService.prepay(authCode, orderRequest.getItemCode(), orderRequest.getQuantity());
         } catch (Exception e) {
             // 예외 발생 시 결제 취소
-            cardCompanyProxy.cancelPayment(orderRequest.getCardNumber(), totalPrice);
+            cardCompany.cancelPayment(orderRequest.getCardNumber(), totalPrice);
             throw new IllegalArgumentException("Failed to prepay", e);
         }
     }

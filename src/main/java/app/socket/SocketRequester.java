@@ -39,7 +39,7 @@ public class SocketRequester {
             if (resp == null) {
                 throw new RuntimeException("선결제 실패 - 응답이 없음");
             }
-            if (!resp.msg_content().get("availability").equals("T")) {
+            if (!resp.getMsg_content().get("availability").equals("T")) {
                 throw new RuntimeException("선결제 실패 - 구매 불가 응답");
             }
         } catch (IOException e) {
