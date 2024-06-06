@@ -52,7 +52,7 @@ public class CommunicationService {
             }
             // 재고가 부족한 경우
             int itemNum = Integer.parseInt(stockResponse.getMsg_content().get("item_num"));
-            if (itemNum > quantity) {
+            if (itemNum < quantity) {
                 continue;
             }
             // 재고가 충분한 경우
@@ -78,6 +78,8 @@ public class CommunicationService {
                 log.error("선결제 요청 중 선결제 실패", e);
             }
         }
+        System.out.println("stockResponses:" + stockResponses);
+        System.out.println("availableClients:" + availableClients);
         throw new IllegalArgumentException("모든 자판기에 선결제 요청을 실패했습니다.");
     }
 //    아래는 모니터링 서비스를 위한 메소드들입니다.
