@@ -33,6 +33,8 @@ public class SocketHandler {
         HashMap<String, String> content = new HashMap<>();
         content.put("item_code", String.valueOf(item.getItemCode()));
         content.put("item_num", String.valueOf(item.getQuantity()));
+        content.put("coor_x", String.valueOf(myInfo.getX()));
+        content.put("coor_y", String.valueOf(myInfo.getY()));
         SocketMessage response = new SocketMessage("resp_stock", myInfo.getId(), msg.src_id(), content);
         output.println(response.toJson());
 
