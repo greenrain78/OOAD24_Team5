@@ -58,15 +58,17 @@ public class CommunicationService {
             // 재고가 충분한 경우
             availableClients.add(stockResponse);
         }
-        // 거리순으로 자판기 정렬
+        // 우리 자판기와의 거리순으로 자판기 정렬
         availableClients.sort((a, b) -> {
             double ax = Double.parseDouble(a.getMsg_content().get("coor_x"));
             double ay = Double.parseDouble(a.getMsg_content().get("coor_y"));
             double bx = Double.parseDouble(b.getMsg_content().get("coor_x"));
             double by = Double.parseDouble(b.getMsg_content().get("coor_y"));
-            double distanceA = Math.sqrt(Math.pow(ax, 2) + Math.pow(ay, 2));
-            double distanceB = Math.sqrt(Math.pow(bx, 2) + Math.pow(by, 2));
-            return Double.compare(distanceA, distanceB);
+            double myX = myInfo.getX();
+            double myY = myInfo.getY();
+            double distA = Math.sqrt(Math.pow(ax - myX, 2) + Math.pow(ay - myY, 2));
+            double distB = Math.sqrt(Math.pow(bx - myX, 2) + Math.pow(by - myY, 2));
+            return Double.compare(distA, distB);
         });
         // 선결제 요청
         for (SocketMessage availableClient : availableClients) {
