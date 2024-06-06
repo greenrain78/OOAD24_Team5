@@ -26,6 +26,13 @@ public class SocketHandler {
 
     public void responseStock(SocketMessage msg, PrintWriter output) {
         log.info("responseStock: {}", msg);
+        // 내게 온 메세지인지 확인 or 0번으로 온 메세지인지 확인
+        if (!myInfo.getId().equals(msg.getDst_id()) && !"0".equals(msg.getDst_id())) {
+            HashMap<String, String> content = new HashMap<>();
+            content.put("error", "Invalid ID");
+            output.println(new SocketMessage("error", myInfo.getId(), msg.getSrc_id(), content).toJson());
+            return;
+        }
         // item 조회
         int itemCode = Integer.parseInt(msg.getMsg_content().get("item_code"));
         Item item = managementService.getItemByItemCode(itemCode);
@@ -41,6 +48,13 @@ public class SocketHandler {
     }
     public void responsePayment(SocketMessage msg, PrintWriter output) {
         log.info("responsePayment: {}", msg);
+        // 내게 온 메세지인지 확인
+        if (!myInfo.getId().equals(msg.getDst_id())) {
+            HashMap<String, String> content = new HashMap<>();
+            content.put("error", "Invalid ID");
+            output.println(new SocketMessage("error", myInfo.getId(), msg.getSrc_id(), content).toJson());
+            return;
+        }
         // 결제 요청
         int itemCode = Integer.parseInt(msg.getMsg_content().get("item_code"));
         int quantity = Integer.parseInt(msg.getMsg_content().get("item_num"));
@@ -53,23 +67,6 @@ public class SocketHandler {
         content.put("availability", result ? "T" : "F");
         SocketMessage response = new SocketMessage("resp_prepay", myInfo.getId(), msg.getSrc_id(), content);
         output.println(response.toJson());
-    }
-
-    // 메세지가 유효한지 검사
-    public boolean isValidMessage(SocketMessage msg, PrintWriter output) {
-        if (myInfo.getId().equals(msg.getDst_id()) || "0".equals(msg.getDst_id())) {
-            return true;
-        } else {
-            output.println(createErrorMessage(msg.getSrc_id(), new IllegalArgumentException("Invalid ID")).toJson());
-            return false;
-        }
-    }
-
-    public SocketMessage createErrorMessage(String srcID, Exception e) {
-        HashMap<String, String> content = new HashMap<>();
-        content.put("error", e.getMessage());
-        content.put("error_class", e.getClass().getName());
-        return new SocketMessage("error", myInfo.getId(), srcID, content);
     }
 
 }
