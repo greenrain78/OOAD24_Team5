@@ -52,7 +52,7 @@ public class CommunicationService {
             }
             // 재고가 부족한 경우
             int itemNum = Integer.parseInt(stockResponse.getMsg_content().get("item_num"));
-            if (itemNum < quantity) {
+            if (itemNum > quantity) {
                 continue;
             }
             // 재고가 충분한 경우
