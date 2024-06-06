@@ -37,7 +37,7 @@ public class CommunicationService {
                  BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                  PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
             ) {
-                SocketMessage res = socketRequester.getStock(itemCode, myInfo.getInfo().getId(), info.getId(), input, output);
+                SocketMessage res = socketRequester.getStock(itemCode, myInfo.getInfo().getId(), input, output);
                 stockResponses.add(res);
             } catch (IOException e) {
                 log.error("선결제 요청 중 재고 확인 요청 실패", e);
@@ -94,7 +94,7 @@ public class CommunicationService {
         ) {
             Map<String, String> items = new HashMap<>();
             for (String itemCode : itemCodeList) {
-                SocketMessage res = socketRequester.getStock(Integer.parseInt(itemCode), myInfo.getInfo().getId(), info.getId(), input, output);
+                SocketMessage res = socketRequester.getStock(Integer.parseInt(itemCode), myInfo.getInfo().getId(), input, output);
                 if (res == null) {
                     items.put(itemCode, "-1");
                 } else {
