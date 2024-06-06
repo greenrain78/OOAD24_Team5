@@ -21,11 +21,11 @@ public class MenuController {
     @GetMapping("/management/codes")
     public RedirectView adminCodes(){
         log.info("redirect to /html/codes.html");
-        return new RedirectView("/html/codes.html");
+        return new RedirectView("/monitor/codes.html");
     }
     @GetMapping("/others")
     public RedirectView adminAll(){
         log.info("redirect to /html/all.html");
-        return new RedirectView("/html/all.html");
+        return new RedirectView("/monitor/all.html");
     }
 }
