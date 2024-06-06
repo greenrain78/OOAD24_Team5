@@ -48,18 +48,6 @@ public class ManagementController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @GetMapping("/client/item/{itemCode}")
-    public ResponseEntity<Object> getItemByDVM(@PathVariable int itemCode) {
-        log.info("getItemByDVM: {}", itemCode);
-        try {
-            HashMap<String, Integer> result = communicationService.getItemByItemCode(itemCode);
-            return ResponseEntity.ok(result);
-        } catch (Exception e) {
-            log.error("error", e);
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
     @PutMapping("/item/{id}")
     public ResponseEntity<Item> updateItem(@PathVariable Long id, @RequestBody Item itemDetails) {
         log.info("update item: {}", itemDetails);

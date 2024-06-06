@@ -18,6 +18,6 @@ public class MyInfo {
     private int y;
 
     public Info getInfo() {
-        return new Info(x, y, id, ip, port);
+        return new Info(id, ip, port);
     }
 }

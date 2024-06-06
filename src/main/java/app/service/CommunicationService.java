@@ -3,6 +3,7 @@ package app.service;
 import app.domain.Code;
 import app.domain.Info;
 import app.domain.MyInfo;
+import app.domain.SocketMessage;
 import app.socket.SocketRequester;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,32 +32,50 @@ public class CommunicationService {
             "11", "12", "13", "14", "15", "16", "17", "18", "19", "20");
 
     public HashMap<String, Object> prepay(String authCode, int itemCode, int quantity) {
-        // 거리순으로 자판기 정렬
-        List<Info> infos = new ArrayList<>(socketClients.values());
-        infos.sort((a, b) -> {
-            double aDist = Math.pow(a.getX() - myInfo.getInfo().getX(), 2) + Math.pow(a.getY() - myInfo.getInfo().getY(), 2);
-            double bDist = Math.pow(b.getX() - myInfo.getInfo().getX(), 2) + Math.pow(b.getY() - myInfo.getInfo().getY(), 2);
-            return Double.compare(aDist, bDist);
-        });
+        // 모든 자판기에 재고 확인 요청
+        List<SocketMessage> stockResponses = new ArrayList<>();
+        for (Info info : socketClients.values()) {
+            try (Socket socket = new Socket(info.getIp(), info.getPort());
+                 BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                 PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
+            ) {
+                SocketMessage res = socketRequester.getStock(itemCode, myInfo.getInfo().getId(), info.getId(), input, output);
+                stockResponses.add(res);
+            } catch (IOException e) {
+                log.error("Connection failed", e);
+            }
+        }
+        // 재고가 부족한 경우 제외
+        List<SocketMessage> availableClients = new ArrayList<>();
+        for (SocketMessage stockResponse : stockResponses) {
+            // 응답 메세지가 없는 경우
+            if (stockResponse == null) {
+                continue;
+            }
+            // 재고가 부족한 경우
+            int itemNum = Integer.parseInt(stockResponse.msg_content().get("item_num"));
+            if (itemNum < quantity) {
+                continue;
+            }
+            // 재고가 충분한 경우
+            availableClients.add(stockResponse);
+        }
         // 선결제 요청
-        for (Info info : infos) {
-            log.info("try to prepay to {}:{} distance: {}", info.getIp(), info.getPort(), Math.sqrt(Math.pow(info.getX() - myInfo.getInfo().getX(), 2) + Math.pow(info.getY() - myInfo.getInfo().getY(), 2)));
+        for (SocketMessage availableClient : availableClients) {
+            Info info = socketClients.get(availableClient.src_id());
             try (Socket socket = new Socket(info.getIp(), info.getPort());
                  BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                  PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
             ) {
                 Code code = new Code(authCode, LocalDateTime.now(), itemCode, quantity);
                 socketRequester.prepay(myInfo.getInfo().getId(), info.getId(), code, input, output);
-                HashMap<String, Object> result = new HashMap<>();
-                result.put("code", code);
-                result.put("info", info);
-                return result;
-            } catch (Exception e) {
+            } catch (IOException e) {
                 log.error("Connection failed", e);
             }
         }
-        throw new IllegalArgumentException("Failed to prepay");
+        throw new IllegalArgumentException("모든 자판기에 선결제 요청을 실패했습니다.");
     }
+//    아래는 모니터링 서비스를 위한 메소드들입니다.
     public Map<String, String> getItems(String id) {
         Info info = socketClients.get(id);
         if (info == null) {
@@ -68,8 +87,12 @@ public class CommunicationService {
         ) {
             Map<String, String> items = new HashMap<>();
             for (String itemCode : itemCodeList) {
-                int itemNum = socketRequester.getItemByItemCode(Integer.parseInt(itemCode), myInfo.getInfo().getId(), info.getId(), input, output);
-                items.put(itemCode, String.valueOf(itemNum));
+                SocketMessage itemNum = socketRequester.getStock(Integer.parseInt(itemCode), myInfo.getInfo().getId(), info.getId(), input, output);
+                if (itemNum == null) {
+                    items.put(itemCode, "-1");
+                } else {
+                    items.put(itemCode, itemNum.msg_content().get("item_num"));
+                }
             }
             if (items.isEmpty() | items.containsKey(null)) {
                 throw new IllegalArgumentException("Failed to get items");
@@ -79,23 +102,6 @@ public class CommunicationService {
             log.error("Connection failed", e);
             throw new IllegalArgumentException("Connection failed");
         }
-    }
-    public HashMap<String, Integer> getItemByItemCode(int itemCode) {
-        // 모든 자판기에 대해서 itemCode에 해당하는 재고 조회
-        HashMap<String, Integer> items = new HashMap<>();
-        for (Info info : socketClients.values()) {
-            try (Socket socket = new Socket(info.getIp(), info.getPort());
-                 BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                 PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
-            ) {
-                int itemNum = socketRequester.getItemByItemCode(itemCode, myInfo.getInfo().getId(), info.getId(), input, output);
-                items.put(info.getId(), itemNum);
-            } catch (IOException e) {
-                log.error("Connection failed", e);
-                items.put(info.getId(), -1);
-            }
-        }
-        return items;
     }
 
     public List<Info> getAllInfo() {

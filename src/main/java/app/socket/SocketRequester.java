@@ -9,19 +9,18 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 public class SocketRequester {
-    public int getItemByItemCode(int itemCode, String myId, String dstId, BufferedReader input, PrintWriter output) {
+    public SocketMessage getStock(int itemCode, String myId, String dstId, BufferedReader input, PrintWriter output) {
         HashMap<String, String> content = new HashMap<>();
         content.put("item_code", String.valueOf(itemCode));
-        content.put("item_num", "-1");
-        // 메세지 전송 - team1에서 team5로 요청
+        content.put("item_num", "-1");  // 몇개를 넣나 의미가 없으니깐 -1로 설정
+        // 메세지 전송
         SocketMessage message = new SocketMessage("req_stock", myId, dstId, content);
         output.println(message.toJson());
         // 응답 확인
         try {
-            SocketMessage resp = SocketMessage.fromJson(input.readLine());
-            return Integer.parseInt(resp.msg_content().get("item_num"));
+            return SocketMessage.fromJson(input.readLine());
         } catch (IOException e) {
-            return -1;
+            return null;
         }
     }
 
@@ -31,7 +30,7 @@ public class SocketRequester {
         content.put("item_code", String.valueOf(code.getItemCode()));
         content.put("quantity", String.valueOf(code.getQuantity()));
         content.put("cert_code", code.getCode());
-        // 메세지 전송 - team1에서 team5로 요청
+        // 메세지 전송
         SocketMessage message = new SocketMessage("req_prepay", myId, dstId, content);
         output.println(message.toJson());
         // 응답 확인
