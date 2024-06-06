@@ -5,12 +5,12 @@ import lombok.Getter;
 
 import java.util.HashMap;
 
+@Getter
 public class SocketMessage {
     private final String msg_type;
     private final String src_id;
     private final String dst_id;
     private final HashMap<String, String> msg_content;
-    private static final Gson gson = new Gson();
 
     public SocketMessage(String msgType, String srcId, String dstId, HashMap<String, String> msgContent) {
         msg_type = msgType;
@@ -20,10 +20,12 @@ public class SocketMessage {
     }
 
     public static SocketMessage fromJson(String json) {
+        Gson gson = new Gson();
         return gson.fromJson(json, SocketMessage.class);
     }
 
     public String toJson() {
+        Gson gson = new Gson();
         return gson.toJson(this);
     }
     @Override
@@ -34,17 +36,5 @@ public class SocketMessage {
                 ", dst_id='" + dst_id + '\'' +
                 ", msg_content=" + msg_content +
                 '}';
-    }
-    public String msg_type() {
-        return msg_type;
-    }
-    public String src_id() {
-        return src_id;
-    }
-    public String dst_id() {
-        return dst_id;
-    }
-    public HashMap<String, String> msg_content() {
-        return msg_content;
     }
 }

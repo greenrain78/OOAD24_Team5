@@ -27,10 +27,10 @@ public class SocketMessageTest {
         String json = "{\"msg_type\":\"type\",\"src_id\":\"src\",\"dst_id\":\"dst\",\"msg_content\":{\"msg_content\":\"content\"}}";
         SocketMessage message = SocketMessage.fromJson(json);
         System.out.println(message);
-        assert message.msg_type().equals("type");
-        assert message.src_id().equals("src");
-        assert message.dst_id().equals("dst");
-        assert message.msg_content().get("msg_content").equals("content");
+        assert message.getMsg_type().equals("type");
+        assert message.getSrc_id().equals("src");
+        assert message.getDst_id().equals("dst");
+        assert message.getMsg_content().get("msg_content").equals("content");
     }
 
     @DisplayName("재고확인 요청 메세지")

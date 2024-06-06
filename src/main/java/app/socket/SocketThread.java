@@ -59,7 +59,7 @@ public class SocketThread extends Thread {
                 return;
             }
             // 요청 처리
-            switch (msg.msg_type()) {
+            switch (msg.getMsg_type()) {
                 case "req_stock":
                     handler.responseStock(msg, output);
                     break;
@@ -72,7 +72,7 @@ public class SocketThread extends Thread {
             }
         } catch (Exception e) {
             log.error("Error processing message: " + clientMessage, e);
-            output.println(handler.createErrorMessage(msg.src_id(), e).toJson());
+            output.println(handler.createErrorMessage(msg.getSrc_id(), e).toJson());
         }
     }
 }

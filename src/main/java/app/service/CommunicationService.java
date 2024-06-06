@@ -51,7 +51,7 @@ public class CommunicationService {
                 continue;
             }
             // 재고가 부족한 경우
-            int itemNum = Integer.parseInt(stockResponse.msg_content().get("item_num"));
+            int itemNum = Integer.parseInt(stockResponse.getMsg_content().get("item_num"));
             if (itemNum < quantity) {
                 continue;
             }
@@ -60,7 +60,7 @@ public class CommunicationService {
         }
         // 선결제 요청
         for (SocketMessage availableClient : availableClients) {
-            Info info = socketClients.get(availableClient.src_id());
+            Info info = socketClients.get(availableClient.getSrc_id());
             try (Socket socket = new Socket(info.getIp(), info.getPort());
                  BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                  PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
@@ -70,8 +70,8 @@ public class CommunicationService {
                 HashMap<String, Object> result = new HashMap<>();
                 result.put("code", code);
                 result.put("info", info);
-                result.put("x", availableClient.msg_content().get("coor_x"));
-                result.put("y", availableClient.msg_content().get("coor_y"));
+                result.put("x", availableClient.getMsg_content().get("coor_x"));
+                result.put("y", availableClient.getMsg_content().get("coor_y"));
                 return result;
 
             } catch (IOException e) {
@@ -98,7 +98,7 @@ public class CommunicationService {
                 if (res == null) {
                     items.put(itemCode, "-1");
                 } else {
-                    items.put(itemCode, res.msg_content().get("item_num"));
+                    items.put(itemCode, res.getMsg_content().get("item_num"));
                 }
             }
             return items;

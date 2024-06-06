@@ -70,11 +70,11 @@ public class SocketServerPrepayTest {
         output.println(message.toJson());
         // 선결제 응답
         SocketMessage resp = SocketMessage.fromJson(input.readLine());
-        assert Objects.equals(resp.msg_type(), "resp_prepay") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.src_id(), "team5") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.dst_id(), "team1") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.msg_content().get("item_code"), String.valueOf(ITEM_CODE)) : "응답: " + resp.toJson();
-        assert Objects.equals(resp.msg_content().get("item_num"), String.valueOf(PREPAY_QUANTITY)) : "응답: " + resp.toJson();
+        assert Objects.equals(resp.getMsg_type(), "resp_prepay") : "응답: " + resp.toJson();
+        assert Objects.equals(resp.getSrc_id(), "team5") : "응답: " + resp.toJson();
+        assert Objects.equals(resp.getDst_id(), "team1") : "응답: " + resp.toJson();
+        assert Objects.equals(resp.getMsg_content().get("item_code"), String.valueOf(ITEM_CODE)) : "응답: " + resp.toJson();
+        assert Objects.equals(resp.getMsg_content().get("item_num"), String.valueOf(PREPAY_QUANTITY)) : "응답: " + resp.toJson();
 
         // 선결제 후 재고 확인
         int quantity = itemRepository.findByItemCode(ITEM_CODE).getQuantity();
