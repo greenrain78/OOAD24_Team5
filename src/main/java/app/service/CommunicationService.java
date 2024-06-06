@@ -74,7 +74,7 @@ public class CommunicationService {
                 result.put("y", availableClient.getMsg_content().get("coor_y"));
                 return result;
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 log.error("선결제 요청 중 선결제 실패", e);
             }
         }
