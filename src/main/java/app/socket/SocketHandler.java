@@ -43,7 +43,7 @@ public class SocketHandler {
         log.info("responsePayment: {}", msg);
         // 결제 요청
         int itemCode = Integer.parseInt(msg.msg_content().get("item_code"));
-        int quantity = Integer.parseInt(msg.msg_content().get("quantity"));
+        int quantity = Integer.parseInt(msg.msg_content().get("item_num"));
         String code = msg.msg_content().get("cert_code");
         boolean result = paymentService.responsePrePayment(code, itemCode, quantity);
         // 응답 메세지 생성
@@ -57,7 +57,7 @@ public class SocketHandler {
 
     // 메세지가 유효한지 검사
     public boolean isValidMessage(SocketMessage msg, PrintWriter output) {
-        if (myInfo.getId().equals(msg.dst_id())) {
+        if (myInfo.getId().equals(msg.dst_id()) || "0".equals(msg.dst_id())) {
             return true;
         } else {
             output.println(createErrorMessage(msg.src_id(), new IllegalArgumentException("Invalid ID")).toJson());

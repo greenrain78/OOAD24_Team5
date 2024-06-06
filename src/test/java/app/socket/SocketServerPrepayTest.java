@@ -63,7 +63,7 @@ public class SocketServerPrepayTest {
         // 선결제 요청
         HashMap<String, String> prepay_content = new HashMap<>();
         prepay_content.put("item_code", String.valueOf(ITEM_CODE));
-        prepay_content.put("quantity", String.valueOf(PREPAY_QUANTITY));
+        prepay_content.put("item_num", String.valueOf(PREPAY_QUANTITY));
         prepay_content.put("cert_code", CERT_CODE);
         // 메세지 전송 - team1에서 team5로 요청
         SocketMessage message = new SocketMessage("req_prepay", "team1", "team5", prepay_content);
