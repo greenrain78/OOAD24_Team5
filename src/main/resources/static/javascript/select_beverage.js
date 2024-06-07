@@ -28,8 +28,15 @@ async function get_closest_DVM(item_code){
 		avail_DVM = data.map(item => ({...item, needsUpdate: false}));
 		closest_DVM=avail_DVM[0];
 		for(var i=0;i<avail_DVM.length;i++){
-			if(avail_DVM[i].distance<closest_DVM.distance){
-				closest_DVM=avail_DVM[i];
+			if(closest_DVM.item_num==0){
+				if(avail_DVM[i].item_num>0){
+					closest_DVM=avail_DVM[i];
+				}
+			}
+			else{
+				if(avail_DVM[i].distance<closest_DVM.distance && avail_DVM[i].item_num>0){
+					closest_DVM=avail_DVM[i];
+				}
 			}
 		}
 	})
@@ -46,7 +53,7 @@ $(document).ready(function(){
 		$("#item_info").text(beverage[cur_item_code-1].name+" "+beverage[cur_item_code-1].price+"원");
 		if(beverage[cur_item_code-1].quantity==0){
 			get_closest_DVM(cur_item_code);
-			if(closest_DVM==null){
+			if(closest_DVM==null || closest_DVM.item_num==0){
 				$("#closest_DVM").attr('class','visible');
 				$("#closest_DVM").text("해당 음료를 구매할 수 있는 자판기가 없습니다");
 			}
@@ -55,17 +62,25 @@ $(document).ready(function(){
 				$("#closest_DVM").text("가장 가까운 자판기 id: "+closest_DVM.id+" 위치: "+closest_DVM.x+","+closest_DVM.y);
 				$("#closest_DVM").attr('class','visible');
 			}
+			count=0;
+			if(count_limit>closest_DVM.item_num){
+				$("#counter-value").text(count+"/"+closest_DVM.item_num);
+			}
+			else{
+				$("#counter-value").text(count+"/"+count_limit);
+			}
 		}
 		else{
 			$("#prepay_notice").attr('class','hidden');
+			count=0;
+			if(count_limit>beverage[cur_item_code-1].quantity){
+				$("#counter-value").text(count+"/"+beverage[cur_item_code-1].quantity);
+			}
+			else{
+				$("#counter-value").text(count+"/"+count_limit);
+			}
 		}
-		count=0;
-		if(count_limit>beverage[cur_item_code-1].quantity){
-			$("#counter-value").text(count+"/"+beverage[cur_item_code-1].quantity);
-		}
-		else{
-			$("#counter-value").text(count+"/"+count_limit);
-		}
+
 		$("#total").text(0);
 		$("#select_form").attr("class","popup");
 		change_position($(".popup"));
@@ -86,6 +101,13 @@ $(document).ready(function(){
 				if(count>0) count--;
 			}
 		}
+		else if(beverage[cur_item_code-1].quantity==0 && closest_DVM!=null && closest_DVM.quantity!=0 && count_limit>closest_DVM.item_num){
+			if($(this).attr("id")=="add"){
+				if(count<closest_DVM.item_num) count++;
+			}else{
+				if(count>0) count--;
+			}
+		}
 		else{
 			if($(this).attr("id")=="add"){
 				if(count<count_limit) count++;
@@ -94,9 +116,13 @@ $(document).ready(function(){
 			}
 		}
 
-		if(count_limit>beverage[cur_item_code-1].quantity){
+		if(count_limit>beverage[cur_item_code-1].quantity && beverage[cur_item_code-1].quantity!=0){
 			$("#counter-value").text(count+"/"+beverage[cur_item_code-1].quantity);
 		}
+		else if(beverage[cur_item_code-1].quantity==0 && closest_DVM!=null && closest_DVM.quantity!=0 && count_limit>closest_DVM.item_num){
+			$("#counter-value").text(count+"/"+closest_DVM.item_num);
+		}
+
 		else{
 			$("#counter-value").text(count+"/"+count_limit);
 		}
