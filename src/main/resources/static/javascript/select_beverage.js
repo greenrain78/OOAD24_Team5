@@ -3,6 +3,7 @@ var count=0;
 var count_limit=5;
 var cur_item_code=0;
 var OrderRequest={"itemCode":0,"cardNumber":"","quantity":0};
+var closest_DVM;
 async function fetch_beverage(){
 	const response = await fetch('/items')
 	.then(response => response.json())
@@ -25,13 +26,12 @@ async function get_closest_DVM(item_code){
 	.then(response => response.json())
 	.then(data => {
 		avail_DVM = data.map(item => ({...item, needsUpdate: false}));
-		var closest_DVM=avail_DVM[0];
+		closest_DVM=avail_DVM[0];
 		for(var i=0;i<avail_DVM.length;i++){
 			if(avail_DVM[i].distance<closest_DVM.distance){
 				closest_DVM=avail_DVM[i];
 			}
 		}
-		return closest_DVM;
 	})
 	.catch(error => console.error(error));
 }
@@ -45,7 +45,7 @@ $(document).ready(function(){
 		cur_item_code = $(this).attr("id");
 		$("#item_info").text(beverage[cur_item_code-1].name+" "+beverage[cur_item_code-1].price+"원");
 		if(beverage[cur_item_code-1].quantity==0){
-			var clossest_DVM = get_closest_DVM(cur_item_code);
+			get_closest_DVM(cur_item_code);
 			$("#prepay_notice").attr('class','visible');
 			$("#closest_DVM").text("가장 가까운 자판기 id: "+closest_DVM.id+" 위치: "+closest_DVM.x+","+closest_DVM.y);
 			$("#closest_DVM").attr('class','visible');
