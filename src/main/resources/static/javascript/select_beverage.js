@@ -3,7 +3,7 @@ var count=0;
 var count_limit=5;
 var cur_item_code=0;
 var OrderRequest={"itemCode":0,"cardNumber":"","quantity":0};
-var closest_DVM;
+var closest_DVM=null;
 async function fetch_beverage(){
 	const response = await fetch('/items')
 	.then(response => response.json())
@@ -46,9 +46,15 @@ $(document).ready(function(){
 		$("#item_info").text(beverage[cur_item_code-1].name+" "+beverage[cur_item_code-1].price+"원");
 		if(beverage[cur_item_code-1].quantity==0){
 			get_closest_DVM(cur_item_code);
-			$("#prepay_notice").attr('class','visible');
-			$("#closest_DVM").text("가장 가까운 자판기 id: "+closest_DVM.id+" 위치: "+closest_DVM.x+","+closest_DVM.y);
-			$("#closest_DVM").attr('class','visible');
+			if(closest_DVM==null){
+				$("#closest_DVM").attr('class','visible');
+				$("#closest_DVM").text("해당 음료를 구매할 수 있는 자판기가 없습니다");
+			}
+			else{
+				$("#prepay_notice").attr('class','visible');
+				$("#closest_DVM").text("가장 가까운 자판기 id: "+closest_DVM.id+" 위치: "+closest_DVM.x+","+closest_DVM.y);
+				$("#closest_DVM").attr('class','visible');
+			}
 		}
 		else{
 			$("#prepay_notice").attr('class','hidden');
