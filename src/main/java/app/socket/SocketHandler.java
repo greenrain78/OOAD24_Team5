@@ -26,8 +26,10 @@ public class SocketHandler {
 
     public void responseStock(SocketMessage msg, PrintWriter output) {
         log.info("responseStock: {}", msg);
+        // 소문자로
+        String dstId = msg.getDst_id().toLowerCase();
         // 내게 온 메세지인지 확인 or 0번으로 온 메세지인지 확인
-        if (!myInfo.getId().equals(msg.getDst_id()) && !"0".equals(msg.getDst_id())) {
+        if (!myInfo.getId().equals(dstId) && !"0".equals(dstId)) {
             HashMap<String, String> content = new HashMap<>();
             content.put("error", "Invalid ID");
             output.println(new SocketMessage("error", myInfo.getId(), msg.getSrc_id(), content).toJson());
@@ -49,7 +51,8 @@ public class SocketHandler {
     public void responsePayment(SocketMessage msg, PrintWriter output) {
         log.info("responsePayment: {}", msg);
         // 내게 온 메세지인지 확인
-        if (!myInfo.getId().equals(msg.getDst_id())) {
+        String dstId = msg.getDst_id().toLowerCase();
+        if (!myInfo.getId().equals(dstId)) {
             HashMap<String, String> content = new HashMap<>();
             content.put("error", "Invalid ID");
             output.println(new SocketMessage("error", myInfo.getId(), msg.getSrc_id(), content).toJson());
