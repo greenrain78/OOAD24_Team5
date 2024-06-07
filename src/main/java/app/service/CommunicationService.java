@@ -121,6 +121,32 @@ public class CommunicationService {
             throw new IllegalArgumentException("재고 확인 요청 실패");
         }
     }
+    // itemcode에 대해 모든 자판기 요청
+    public List<Map<String, String>> getItemByItemCode(int itemCode) {
+        List<Map<String, String>> items = new ArrayList<>();
+        for (Info info : socketClients.values()) {
+            try (Socket socket = new Socket(info.getIp(), info.getPort());
+                 BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                 PrintWriter output = new PrintWriter(socket.getOutputStream(), true)
+            ) {
+                SocketMessage res = socketRequester.getStock(itemCode, myInfo.getInfo().getId(), input, output);
+                if (res == null) {
+                    continue;
+                }
+                Map<String, String> item = new HashMap<>();
+                item.put("id", info.getId());
+                item.put("item_num", res.getMsg_content().get("item_num"));
+                item.put("x", res.getMsg_content().get("coor_x"));
+                item.put("y", res.getMsg_content().get("coor_y"));
+                // 자핀기 상대 거리 계산
+                item.put("distance", String.valueOf(Math.sqrt(Math.pow(myInfo.getX() - Double.parseDouble(res.getMsg_content().get("coor_x")), 2) + Math.pow(myInfo.getY() - Double.parseDouble(res.getMsg_content().get("coor_y")), 2))));
+                items.add(item);
+            } catch (IOException e) {
+                log.error("재고 확인 요청 실패", e);
+            }
+        }
+        return items;
+    }
 
     public List<Info> getAllInfo() {
         return new ArrayList<>(socketClients.values());
