@@ -92,6 +92,7 @@ public class CommunicationService {
         }
         System.out.println("stockResponses:" + stockResponses);
         System.out.println("availableClients:" + availableClients);
+        System.out.println("socketClients:" + socketClients);
         throw new IllegalArgumentException("모든 자판기에 선결제 요청을 실패했습니다.");
     }
 //    아래는 모니터링 서비스를 위한 메소드들입니다.
