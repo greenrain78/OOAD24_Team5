@@ -67,6 +67,8 @@ $(document).ready(function(){
 	})
 
 	$(".button_cancel").on("click",function(){
+		$("#prepay_notice").attr("class","hidden");
+		$("#closest_DVM").attr("class","hidden");
 		$("#select_form").fadeOut();
 	})
 
