@@ -40,11 +40,12 @@ public class SocketHandler {
         Item item = managementService.getItemByItemCode(itemCode);
         // 응답 메세지 생성
         HashMap<String, String> content = new HashMap<>();
-        content.put("item_code", String.valueOf(item.getItemCode()));
+        content.put("item_code", String.format("%02d", itemCode));
         content.put("item_num", String.valueOf(item.getQuantity()));
         content.put("coor_x", String.valueOf(myInfo.getX()));
         content.put("coor_y", String.valueOf(myInfo.getY()));
         SocketMessage response = new SocketMessage("resp_stock", myInfo.getId(), msg.getSrc_id(), content);
+        log.info("responseStockMsg: {}", response);
         output.println(response.toJson());
 
     }
@@ -65,10 +66,11 @@ public class SocketHandler {
         boolean result = paymentService.responsePrePayment(code, itemCode, quantity);
         // 응답 메세지 생성
         HashMap<String, String> content = new HashMap<>();
-        content.put("item_code", String.valueOf(itemCode));
+        content.put("item_code", String.format("%02d", itemCode));
         content.put("item_num", String.valueOf(quantity));
         content.put("availability", result ? "T" : "F");
         SocketMessage response = new SocketMessage("resp_prepay", myInfo.getId(), msg.getSrc_id(), content);
+        log.info("responseStockMsg: {}", response);
         output.println(response.toJson());
     }
 
