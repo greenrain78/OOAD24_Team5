@@ -14,8 +14,8 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/admin")
-public class AdminController {
+@RequestMapping("/monitor")
+public class MonitorController {
 
     @Autowired
     private CommunicationService communicationService;
