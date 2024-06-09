@@ -73,7 +73,7 @@ public class SocketServerPrepayTest {
         assert Objects.equals(resp.getMsg_type(), "resp_prepay") : "응답: " + resp.toJson();
         assert Objects.equals(resp.getSrc_id(), "team5") : "응답: " + resp.toJson();
         assert Objects.equals(resp.getDst_id(), "team1") : "응답: " + resp.toJson();
-        assert Objects.equals(resp.getMsg_content().get("item_code"), String.valueOf(ITEM_CODE)) : "응답: " + resp.toJson();
+        assert Objects.equals(resp.getMsg_content().get("item_code"), "02") : "응답: " + resp.toJson();
         assert Objects.equals(resp.getMsg_content().get("item_num"), String.valueOf(PREPAY_QUANTITY)) : "응답: " + resp.toJson();
 
         // 선결제 후 재고 확인

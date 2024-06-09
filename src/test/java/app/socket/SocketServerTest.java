@@ -55,7 +55,7 @@ public class SocketServerTest {
             assert Objects.equals(resp.getMsg_type(), "resp_stock") : "응답: " + resp.toJson();
             assert Objects.equals(resp.getSrc_id(), "team5") : "응답: " + resp.toJson();
             assert Objects.equals(resp.getDst_id(), "team1") : "응답: " + resp.toJson();
-            assert Objects.equals(resp.getMsg_content().get("item_code"), "4") : "응답: " + resp.toJson();
+            assert Objects.equals(resp.getMsg_content().get("item_code"), "04") : "응답: " + resp.toJson();
             assert Objects.equals(resp.getMsg_content().get("item_num"), "10") : "응답: " + resp.toJson();
 
         } catch (IOException e) {
